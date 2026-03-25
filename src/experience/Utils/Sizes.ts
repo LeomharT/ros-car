@@ -14,7 +14,7 @@ export default class Sizes extends EventDispatcher<{
 
     // Resize events
     window.addEventListener('resize', () => {
-      this._updateState();
+      this._state = this._updateState();
       this.dispatchEvent({ type: 'resize' });
     });
   }

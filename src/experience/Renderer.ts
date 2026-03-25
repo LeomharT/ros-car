@@ -14,14 +14,14 @@ import {
 import type { Experience } from './Experience';
 
 export default class Renderer {
-  constructor(experience: Experience) {
-    this._experience = experience;
+  constructor(exp: Experience) {
+    this._exp = exp;
 
     this.instance = this._setupInstance();
     this._debugPane();
   }
 
-  private _experience: Experience;
+  private _exp: Experience;
 
   public instance: WebGLRenderer;
 
@@ -30,20 +30,22 @@ export default class Renderer {
       alpha: true,
       antialias: true,
     });
-    renderer.toneMapping = CineonToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = PCFSoftShadowMap;
-    renderer.setClearColor('#211D20');
-    renderer.setSize(this._experience.sizes.width, this._experience.sizes.height);
-    renderer.setPixelRatio(this._experience.sizes.pixelRatio);
+    renderer.setSize(this._exp.sizes.width, this._exp.sizes.height);
+    renderer.setPixelRatio(this._exp.sizes.pixelRatio);
 
     return renderer;
   }
 
   private _debugPane() {
-    const pane = this._experience.debug.pane.addFolder({ title: '🎨 Renderer' });
+    const pane = this._exp.debug.pane.addFolder({ title: '🎨 Renderer' });
+    pane.addBinding(this.instance.info.render, 'triangles', {
+      readonly: true,
+    });
     pane.addBinding(this.instance, 'toneMapping', {
       options: {
         NoToneMapping: NoToneMapping,
@@ -64,10 +66,10 @@ export default class Renderer {
   }
 
   public render() {
-    this.instance.render(this._experience.scene, this._experience.camera.instance);
+    this.instance.render(this._exp.scene, this._exp.camera.instance);
   }
 
   public resize() {
-    this.instance.setSize(this._experience.sizes.width, this._experience.sizes.height);
+    this.instance.setSize(this._exp.sizes.width, this._exp.sizes.height);
   }
 }
