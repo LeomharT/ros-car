@@ -27,7 +27,6 @@ export default class Camera {
   }
 
   private _setupControls() {
-    console.log(this._experience.canvas);
     const controls1 = new OrbitControls(this.instance, this._experience.canvas);
     controls1.enableDamping = true;
     controls1.enableRotate = true;
@@ -50,7 +49,7 @@ export default class Camera {
       0.1,
       1000,
     );
-    camera.position.set(6, 4, 8);
+    camera.position.set(3, 3, 3);
     this._experience.scene.add(camera);
 
     return camera;
