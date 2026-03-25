@@ -35,8 +35,6 @@ void main() {
     alpha = mask;
 
     // Lines
-    // alpha = 1.0;
-    // color = vec3(0.0);
 
     uv  = vUv;
     uv *= 22.0;
