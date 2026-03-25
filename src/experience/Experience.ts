@@ -1,10 +1,10 @@
 import { AxesHelper, Color, FogExp2, Scene } from 'three';
 import Camera from './Camera';
 import Renderer from './Renderer';
-import { Debug } from './Ui/Debug';
-import Sizes from './Utils/Sizes';
-import Time from './Utils/Time';
-import { World } from './World/World';
+import { Debug } from './ui/Debug';
+import Sizes from './utils/Sizes';
+import Time from './utils/Time';
+import { World } from './world/World';
 
 export class Experience {
   constructor() {
