@@ -1,5 +1,5 @@
 import { EventDispatcher, Texture, TextureLoader } from 'three';
-import { GLTFLoader, HDRLoader, type GLTF } from 'three/examples/jsm/Addons.js';
+import { DRACOLoader, GLTFLoader, HDRLoader, type GLTF } from 'three/examples/jsm/Addons.js';
 import { sources } from '../data/sources';
 
 export type ResourcesLoaders = {
@@ -19,11 +19,11 @@ export default class Resources extends EventDispatcher<{
   constructor() {
     super();
 
-    this._setLoaders();
+    this.loaders = this._setupLoaders();
     this._startLoading();
   }
 
-  public loaders: ResourcesLoaders = {} as ResourcesLoaders;
+  public loaders: ResourcesLoaders;
 
   public items: ResourcesItems = {} as ResourcesItems;
 
@@ -31,12 +31,22 @@ export default class Resources extends EventDispatcher<{
 
   public loaded: number = 0;
 
-  private _setLoaders() {
-    this.loaders.gltfLoader = new GLTFLoader();
+  private _setupLoaders() {
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/lib/draco/');
+    dracoLoader.preload();
 
-    this.loaders.hdrLoader = new HDRLoader();
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.dracoLoader = dracoLoader;
 
-    this.loaders.textureLoader = new TextureLoader();
+    const hdrLoader = new HDRLoader();
+    const textureLoader = new TextureLoader();
+
+    return {
+      gltfLoader,
+      hdrLoader,
+      textureLoader,
+    };
   }
 
   private _startLoading() {
