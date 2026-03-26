@@ -35,18 +35,25 @@ void main() {
     alpha = mask;
 
     // Lines
-
     uv  = vUv;
     uv *= 22.0;
     uv  = fract(uv);
 
-    vec2 q = abs(uv - center);
+    vec2  q             = abs(uv - center);
+    vec2  res           = fwidth(uv);
+    float lineThickness = 0.494;
 
-    float l = step(q.x, 0.5 - 0.002);
-    float t = step(q.y, 0.5 - 0.002);
+    float lx = smoothstep(lineThickness - res.x, lineThickness, q.x);
+    float ly = smoothstep(lineThickness - res.y, lineThickness, q.y);
 
-    color += vec3(1.0) * (1.0 - l * t);
-    alpha += (1.0 - l * t);
+    float lineMask = max(lx, ly);
+
+    color = mix(
+        color,
+        vec3(1.0),
+        lineMask
+    );
+    alpha = max(alpha, lineMask);
 
     gl_FragColor = vec4(color, alpha);
 
