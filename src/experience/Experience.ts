@@ -1,4 +1,4 @@
-import { AxesHelper, Color, FogExp2, Scene } from 'three';
+import { AxesHelper, Scene } from 'three';
 import Camera from './Camera';
 import Renderer from './Renderer';
 import { Debug } from './ui/Debug';
@@ -14,10 +14,7 @@ export class Experience {
     this.sizes = new Sizes();
     this.resources = new Resources();
 
-    const fog = new FogExp2(new Color('#000'), 0.06);
     this.scene = new Scene();
-    this.scene.background = fog.color;
-    this.scene.fog = fog;
 
     this.renderer = new Renderer(this);
     this.canvas = this.renderer.instance.domElement;

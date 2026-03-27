@@ -49,7 +49,7 @@ export default class Camera {
       0.1,
       1000,
     );
-    camera.position.set(3, 3, 3);
+    camera.position.set(12, 12, 12);
     this._experience.scene.add(camera);
 
     return camera;
