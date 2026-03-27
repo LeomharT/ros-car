@@ -20,7 +20,6 @@ export class Environment {
 
   private _setupFog() {
     const fog = new FogExp2(new Color('#000'), 0.02);
-    this._exp.scene.background = fog.color;
     this._exp.scene.fog = fog;
   }
 

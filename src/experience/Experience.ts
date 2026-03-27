@@ -1,4 +1,4 @@
-import { AxesHelper, Scene } from 'three';
+import { AxesHelper, Color, Scene } from 'three';
 import Camera from './Camera';
 import Renderer from './Renderer';
 import { Debug } from './ui/Debug';
@@ -15,6 +15,7 @@ export class Experience {
     this.resources = new Resources();
 
     this.scene = new Scene();
+    this.scene.background = new Color('#000');
 
     this.renderer = new Renderer(this);
     this.canvas = this.renderer.instance.domElement;
