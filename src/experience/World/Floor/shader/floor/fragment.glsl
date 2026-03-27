@@ -36,7 +36,7 @@ void main() {
 
     // Lines
     uv  = vUv;
-    uv *= 22.0;
+    uv *= 16.0;
     uv  = fract(uv);
 
     vec2  q             = abs(uv - center);

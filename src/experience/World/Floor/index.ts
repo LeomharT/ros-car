@@ -32,8 +32,8 @@ export class Floor {
       UniformsLib['fog'],
       {
         uScale: new Uniform(95.0),
-        uThickness: new Uniform(0.01),
-        uCross: new Uniform(0.05),
+        uThickness: new Uniform(0.03),
+        uCross: new Uniform(0.11),
         uOffset: new Uniform(new Vector2(0.5, 0)),
         uColor: new Uniform(new Color(0.125, 0.785, 0.128)),
       },
@@ -41,7 +41,7 @@ export class Floor {
   }
 
   private _setupMesh() {
-    const floorGeometry = new PlaneGeometry(100, 100, 128, 128);
+    const floorGeometry = new PlaneGeometry(200, 200, 128, 128);
     const floorMaterial = new ShaderMaterial({
       vertexShader: floorVertexShader,
       fragmentShader: floorFragmentShader,
