@@ -5,6 +5,7 @@ import { Debug } from './ui/Debug';
 import Resources from './utils/Resources';
 import Sizes from './utils/Sizes';
 import Time from './utils/Time';
+import { PhysicWorld } from './world/PhysicWorld';
 import { World } from './world/World';
 
 export class Experience {
@@ -20,6 +21,7 @@ export class Experience {
     this.renderer = new Renderer(this);
     this.canvas = this.renderer.instance.domElement;
     this.camera = new Camera(this);
+    this.physicWorld = new PhysicWorld(this);
     this.world = new World(this);
 
     // Events
@@ -45,13 +47,22 @@ export class Experience {
 
   public resources: Resources;
 
+  public physicWorld: PhysicWorld;
+
   public world: World;
 
   public update = () => {
     this.debug.fpsGraph.begin();
 
-    this.camera.update(this.time.delta);
+    // Render
     this.renderer.render();
+
+    // Update
+    this.camera.update(this.time.delta);
+
+    // World update
+    this.world.update();
+    this.physicWorld.update();
 
     this.debug.fpsGraph.end();
   };

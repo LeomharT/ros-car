@@ -1,3 +1,4 @@
+import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import {
   Color,
   Mesh,
@@ -53,6 +54,13 @@ export class Floor {
     const mesh = new Mesh(floorGeometry, floorMaterial);
     mesh.position.y = -0.001;
     mesh.rotation.x = -Math.PI / 2;
+
+    const floorBody = this._exp.physicWorld.instance.createRigidBody(
+      RigidBodyDesc.fixed().setTranslation(0, -0.5, 0),
+    );
+    const floorShape = ColliderDesc.cuboid(100, 0.5, 100);
+    this._exp.physicWorld.instance.createCollider(floorShape, floorBody);
+
     return mesh;
   }
 
