@@ -1,3 +1,4 @@
+import { World as RapierWorld } from '@dimforge/rapier3d';
 import type { Experience } from '../Experience';
 import { Environment } from './Environment';
 import { Floor } from './Floor';
@@ -7,6 +8,7 @@ export class World {
   constructor(exp: Experience) {
     this._exp = exp;
 
+    this._setupRapierWorld();
     this.floor = new Floor(this._exp);
 
     this._exp.resources.addEventListener('ready', () => {
@@ -17,6 +19,8 @@ export class World {
 
   private _exp: Experience;
 
+  private world: RapierWorld;
+
   public floor: Floor;
 
   public env!: Environment;
@@ -24,4 +28,8 @@ export class World {
   public rosCar!: ROSCar;
 
   public update() {}
+
+  private _setupRapierWorld() {
+    console.log(RapierWorld);
+  }
 }
