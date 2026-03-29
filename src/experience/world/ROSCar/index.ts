@@ -35,8 +35,8 @@ export class ROSCar {
 
     const bodyDesc = RigidBodyDesc.dynamic();
     bodyDesc.setTranslation(0, 8, 0);
+    bodyDesc.setAngvel({ x: 3.0, y: 0.0, z: 0.0 });
     const sphereBody = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
-    console.log(sphereBody.translation());
 
     const sphereShap = ColliderDesc.ball(0.5);
     const collider = this._exp.physicWorld.instance.createCollider(sphereShap, sphereBody);
