@@ -23,5 +23,9 @@ export class World {
 
   public rosCar!: ROSCar;
 
-  public update() {}
+  public update() {
+    if (this.rosCar) {
+      this.rosCar.update();
+    }
+  }
 }
