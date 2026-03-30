@@ -10,6 +10,7 @@ export type ResourcesLoaders = {
 
 export type ResourcesItems = {
   carModel: GLTF;
+  mapModel: GLTF;
   environment: Texture;
 };
 

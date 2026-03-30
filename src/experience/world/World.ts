@@ -1,7 +1,8 @@
 import type { Experience } from '../Experience';
+import { Car } from './Car';
 import { Environment } from './Environment';
 import { Floor } from './Floor';
-import { ROSCar } from './ROSCar';
+import { Sandbox } from './Sandbox';
 
 export class World {
   constructor(exp: Experience) {
@@ -11,7 +12,8 @@ export class World {
 
     this._exp.resources.addEventListener('ready', () => {
       this.env = new Environment(this._exp);
-      this.rosCar = new ROSCar(this._exp);
+      this.car = new Car(this._exp);
+      this.sandbox = new Sandbox(this._exp);
     });
   }
 
@@ -21,11 +23,12 @@ export class World {
 
   public env!: Environment;
 
-  public rosCar!: ROSCar;
+  public car!: Car;
+
+  public sandbox!: Sandbox;
 
   public update() {
-    if (this.rosCar) {
-      this.rosCar.update();
-    }
+    this.car?.update();
+    this.sandbox?.update();
   }
 }

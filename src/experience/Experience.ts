@@ -54,6 +54,9 @@ export class Experience {
   public update = () => {
     this.debug.fpsGraph.begin();
 
+    // Phycis Update
+    this.physicWorld.update();
+
     // Render
     this.renderer.render();
 
@@ -62,7 +65,6 @@ export class Experience {
 
     // World update
     this.world.update();
-    this.physicWorld.update();
 
     this.debug.fpsGraph.end();
   };

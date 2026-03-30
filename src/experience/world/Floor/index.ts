@@ -1,4 +1,3 @@
-import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import {
   Color,
   Mesh,
@@ -52,14 +51,8 @@ export class Floor {
     });
 
     const mesh = new Mesh(floorGeometry, floorMaterial);
-    mesh.position.y = -0.001;
+    mesh.position.y = -0.01;
     mesh.rotation.x = -Math.PI / 2;
-
-    const floorBody = this._exp.physicWorld.instance.createRigidBody(
-      RigidBodyDesc.fixed().setTranslation(0, -0.5, 0),
-    );
-    const floorShape = ColliderDesc.cuboid(100, 0.5, 100);
-    this._exp.physicWorld.instance.createCollider(floorShape, floorBody);
 
     return mesh;
   }
@@ -72,19 +65,19 @@ export class Floor {
       label: 'scale',
       min: 1,
       max: 100,
-      strp: 1,
+      step: 1,
     });
     pane.addBinding(this._uniform.uThickness, 'value', {
       label: 'thickness',
       min: 0,
       max: 0.5,
-      strp: 0.001,
+      step: 0.001,
     });
     pane.addBinding(this._uniform.uCross, 'value', {
       label: 'cross',
       min: 0,
       max: 0.5,
-      strp: 0.001,
+      step: 0.001,
     });
     pane.addBinding(this._uniform.uOffset, 'value', {
       label: 'offset',

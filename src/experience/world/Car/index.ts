@@ -2,7 +2,7 @@ import { Collider, ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import { IcosahedronGeometry, Mesh, MeshStandardMaterial } from 'three';
 import type { Experience } from '../../Experience';
 
-export class ROSCar {
+export class Car {
   constructor(exp: Experience) {
     this._exp = exp;
     const { sphere, collider } = this._setupModel();
@@ -33,9 +33,11 @@ export class ROSCar {
     sphere.position.y = 8;
     this._exp.scene.add(sphere);
 
-    const bodyDesc = RigidBodyDesc.dynamic();
-    bodyDesc.setTranslation(0, 8, 0);
-    bodyDesc.setAngvel({ x: 3.0, y: 0.0, z: 0.0 });
+    const bodyDesc = RigidBodyDesc.dynamic()
+      .setTranslation(0, 8, 0)
+      .setAngvel({ x: 3, y: 0, z: 0 })
+      .setLinvel(0, 0, 0);
+
     const sphereBody = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
 
     const sphereShap = ColliderDesc.ball(0.5);
