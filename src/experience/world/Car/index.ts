@@ -41,6 +41,7 @@ export class Car {
     const sphereBody = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
 
     const sphereShap = ColliderDesc.ball(0.5);
+    sphereShap.restitution = 0.8;
     const collider = this._exp.physicWorld.instance.createCollider(sphereShap, sphereBody);
 
     return { sphere, collider };
