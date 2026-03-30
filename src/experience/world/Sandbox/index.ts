@@ -1,5 +1,6 @@
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
-import { Mesh, MeshStandardMaterial, type Group } from 'three';
+import gsap from 'gsap';
+import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
 
 export class Sandbox {
@@ -8,8 +9,11 @@ export class Sandbox {
 
     this.mesh = this._initModel();
     this.floor = this._initFloor();
+    this.barrier = this._initBarrier();
 
     this._exp.scene.add(this.mesh);
+
+    this._setupPane();
   }
 
   private _exp: Experience;
@@ -17,6 +21,8 @@ export class Sandbox {
   public mesh: Group;
 
   public floor: ReturnType<typeof this._initFloor>;
+
+  public barrier: ReturnType<typeof this._initBarrier>;
 
   private _initModel() {
     const model = this._exp.resources.items.mapModel;
@@ -30,6 +36,15 @@ export class Sandbox {
     return mesh;
   }
 
+  private _setupPane() {
+    const pane = this._exp.debug.pane.addFolder({ title: '📦 Sandbox' });
+
+    const barrier_f = pane.addFolder({ title: 'Barrier' });
+    barrier_f
+      .addButton({ label: 'Toggle Barrier', title: 'Toggle' })
+      .on('click', () => this._toggleBarrier(this.barrier.open));
+  }
+
   private _initFloor() {
     const mesh = this.mesh.getObjectByName('大地面') as Mesh;
 
@@ -40,6 +55,47 @@ export class Sandbox {
     const collider = this._exp.physicWorld.instance.createCollider(colliderDesc, body);
 
     return { mesh, body, collider };
+  }
+
+  private _initBarrier() {
+    const open = false;
+
+    const mesh = this.mesh.getObjectByName('杠') as Group;
+
+    const box = new Box3();
+    box.setFromObject(mesh);
+
+    const size = new Vector3();
+    box.getSize(size);
+
+    const bodyDesc = RigidBodyDesc.fixed().setTranslation(
+      mesh.position.x,
+      mesh.position.y,
+      mesh.position.z + size.z / 2,
+    );
+
+    const body = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
+
+    const colliderDesc = ColliderDesc.cuboid(0.1, 0.1, 2);
+    const collider = this._exp.physicWorld.instance.createCollider(colliderDesc, body);
+
+    return { mesh, body, collider, open };
+  }
+
+  private _toggleBarrier(open: boolean) {
+    this.barrier.open = !open;
+    const target = this.barrier.open ? -Math.PI * 1.25 : -Math.PI * 0.75;
+
+    gsap
+      .to(this.barrier.mesh.rotation, {
+        x: target,
+        ease: 'back.inOut',
+        duration: 1.25,
+        onComplete: () => {
+          this.barrier.collider.setEnabled(!this.barrier.open);
+        },
+      })
+      .play();
   }
 
   public update() {}

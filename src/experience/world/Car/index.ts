@@ -37,12 +37,11 @@ export class Car {
       .setTranslation(0, 8, 0)
       .setAngvel({ x: 3, y: 0, z: 0 })
       .setLinvel(0, 0, 0);
+    const body = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
 
-    const sphereBody = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
-
-    const sphereShap = ColliderDesc.ball(0.5);
-    sphereShap.restitution = 0.8;
-    const collider = this._exp.physicWorld.instance.createCollider(sphereShap, sphereBody);
+    const colliderDesc = ColliderDesc.ball(0.5);
+    colliderDesc.restitution = 0.8;
+    const collider = this._exp.physicWorld.instance.createCollider(colliderDesc, body);
 
     return { sphere, collider };
   }

@@ -24,7 +24,7 @@ export class Environment {
   }
 
   public _debugPane() {
-    const pane = this._exp.debug.pane.addFolder({ title: 'Scene' });
+    const pane = this._exp.debug.pane.addFolder({ title: '🏞️ Environment' });
     if (this._exp.scene.fog instanceof FogExp2) {
       pane.addBinding(this._exp.scene.fog, 'density', {
         min: 0,
