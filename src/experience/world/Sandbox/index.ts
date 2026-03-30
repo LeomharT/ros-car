@@ -13,7 +13,7 @@ export class Sandbox {
 
     this._exp.scene.add(this.mesh);
 
-    this._setupPane();
+    this.pane = this._setupPane();
   }
 
   private _exp: Experience;
@@ -23,6 +23,8 @@ export class Sandbox {
   public floor: ReturnType<typeof this._initFloor>;
 
   public barrier: ReturnType<typeof this._initBarrier>;
+
+  public pane: ReturnType<typeof this._setupPane>;
 
   private _initModel() {
     const model = this._exp.resources.items.mapModel;
@@ -40,9 +42,11 @@ export class Sandbox {
     const pane = this._exp.debug.pane.addFolder({ title: '📦 Sandbox' });
 
     const barrier_f = pane.addFolder({ title: 'Barrier' });
-    barrier_f
+    const button = barrier_f
       .addButton({ label: 'Toggle Barrier', title: 'Toggle' })
       .on('click', () => this._toggleBarrier(this.barrier.open));
+
+    return { pane, button };
   }
 
   private _initFloor() {
@@ -91,7 +95,11 @@ export class Sandbox {
         x: target,
         ease: 'back.inOut',
         duration: 1.25,
+        onStart: () => {
+          this.pane.button.disabled = true;
+        },
         onComplete: () => {
+          this.pane.button.disabled = false;
           this.barrier.collider.setEnabled(!this.barrier.open);
         },
       })
