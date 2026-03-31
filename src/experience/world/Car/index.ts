@@ -1,16 +1,21 @@
 import { Collider, ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import { IcosahedronGeometry, Mesh, MeshStandardMaterial } from 'three';
+import type { FolderApi } from 'tweakpane';
 import type { Experience } from '../../Experience';
 
 export class Car {
   constructor(exp: Experience) {
     this._exp = exp;
+    this._pane = this._setupPane();
+
     const { sphere, collider } = this._setupModel();
     this.test = sphere;
     this._collider = collider;
   }
 
   private _exp: Experience;
+
+  private _pane: FolderApi;
 
   private test: Mesh;
 
@@ -44,6 +49,11 @@ export class Car {
     const collider = this._exp.physicWorld.instance.createCollider(colliderDesc, body);
 
     return { sphere, collider };
+  }
+
+  private _setupPane() {
+    const pane = this._exp.debug.pane.addFolder({ title: '🚗 Car' });
+    return pane;
   }
 
   public update() {
