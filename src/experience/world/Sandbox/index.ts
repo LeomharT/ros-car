@@ -41,7 +41,7 @@ export class Sandbox {
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '📦 Sandbox' });
 
-    const barrier_f = pane.addFolder({ title: 'Barrier' });
+    const barrier_f = pane.addFolder({ title: '🚧 Barrier' });
     const button = barrier_f
       .addButton({ label: 'Toggle Barrier', title: 'Toggle' })
       .on('click', () => this._toggleBarrier(this.barrier.open));
