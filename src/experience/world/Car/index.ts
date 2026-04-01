@@ -8,9 +8,7 @@ export class Car {
     this._pane = this._setupPane();
 
     this.mesh = this._initModel();
-    this.wheels = this._initWheels();
-
-    console.log(this.wheels);
+    this.car = this._initCar();
   }
 
   private _exp: Experience;
@@ -19,7 +17,7 @@ export class Car {
 
   public mesh: Group;
 
-  public wheels: ReturnType<typeof this._initWheels>;
+  public car: ReturnType<typeof this._initCar>;
 
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '🚗 Car' });
@@ -40,7 +38,7 @@ export class Car {
     return car;
   }
 
-  private _initWheels() {
+  private _initCar() {
     const wheelFL = this.mesh.getObjectByName('前轮1') as Mesh;
     const wheelFR = this.mesh.getObjectByName('前轮2') as Mesh;
     const wheelBL = this.mesh.getObjectByName('后轮1') as Mesh;
@@ -48,11 +46,11 @@ export class Car {
 
     const wheels = [wheelFL, wheelFR, wheelBL, wheelBR] as const;
 
-    return wheels;
+    return { wheels };
   }
 
   public update() {
-    for (const w of this.wheels) {
+    for (const w of this.car.wheels) {
       w.rotation.z -= 0.111;
     }
   }
