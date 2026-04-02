@@ -2,6 +2,7 @@ import { AxesHelper, Color, Scene } from 'three';
 import Camera from './Camera';
 import Renderer from './Renderer';
 import { Debug } from './ui/Debug';
+import { KeyboardControls } from './utils/KeyboardControl';
 import Resources from './utils/Resources';
 import Sizes from './utils/Sizes';
 import Time from './utils/Time';
@@ -14,6 +15,7 @@ export class Experience {
     this.debug = new Debug();
     this.sizes = new Sizes();
     this.resources = new Resources();
+    this.keyboardCtrl = new KeyboardControls();
 
     this.scene = new Scene();
     this.scene.background = new Color('#000');
@@ -46,6 +48,8 @@ export class Experience {
   public canvas: HTMLCanvasElement;
 
   public resources: Resources;
+
+  public keyboardCtrl: KeyboardControls;
 
   public physicWorld: PhysicWorld;
 

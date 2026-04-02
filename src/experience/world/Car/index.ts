@@ -1,4 +1,10 @@
-import { ColliderDesc, JointData, RevoluteImpulseJoint, RigidBodyDesc } from '@dimforge/rapier3d';
+import {
+  ColliderDesc,
+  JointData,
+  MotorModel,
+  RevoluteImpulseJoint,
+  RigidBodyDesc,
+} from '@dimforge/rapier3d';
 import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
 import type { FolderApi } from 'tweakpane';
 import type { Experience } from '../../Experience';
@@ -15,7 +21,9 @@ export class Car {
 
   private _pane: FolderApi;
 
-  private _keyMap: { [key: string]: boolean } = {};
+  private _steer: number = 0;
+
+  public _velocity: number = 0;
 
   public car: ReturnType<typeof this._initModel>;
 
@@ -60,15 +68,17 @@ export class Car {
 
     // Car body
     const carBodyDesc = RigidBodyDesc.dynamic();
-    carBodyDesc.setTranslation(0, 3, 0);
+    carBodyDesc.setTranslation(0, 1.25, 0);
     carBodyDesc.setCanSleep(false);
     carBodyDesc.setEnabled(false);
+    carBodyDesc.setLinearDamping(0.5);
     const carBody = this._exp.physicWorld.instance.createRigidBody(carBodyDesc);
 
     const carColliderDesc = ColliderDesc.cuboid(1.55, 1.25, 0.55);
     carColliderDesc.setTranslation(0, 1.5, 0);
     carColliderDesc.setRestitution(0);
     carColliderDesc.setEnabled(true);
+    carColliderDesc.setCollisionGroups(131073);
     this._exp.physicWorld.instance.createCollider(carColliderDesc, carBody);
 
     this._pane.addBinding(controls, 'enabled', {}).on('change', (val) => {
@@ -85,8 +95,9 @@ export class Car {
     wheelFLColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelFLColliderDesc.setFriction(0.2);
+    wheelFLColliderDesc.setFriction(1.0);
     wheelFLColliderDesc.setMass(2);
+    wheelFLColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelFLColliderDesc, wheelFLBody);
 
     //
@@ -99,8 +110,9 @@ export class Car {
     wheelFRColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelFRColliderDesc.setFriction(0.2);
+    wheelFRColliderDesc.setFriction(1.0);
     wheelFRColliderDesc.setMass(2);
+    wheelFRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelFRColliderDesc, wheelFRBody);
 
     //
@@ -113,8 +125,9 @@ export class Car {
     wheelBLColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelBLColliderDesc.setFriction(0.2);
+    wheelBLColliderDesc.setFriction(1.0);
     wheelBLColliderDesc.setMass(2);
+    wheelBLColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBLColliderDesc, wheelBLBody);
 
     //
@@ -127,16 +140,39 @@ export class Car {
     wheelBRColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelBRColliderDesc.setFriction(0.2);
+    wheelBRColliderDesc.setFriction(1.0);
     wheelBRColliderDesc.setMass(2);
+    wheelBRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBRColliderDesc, wheelBRBody);
 
-    const wheelBodys = [wheelFLBody, wheelFRBody, wheelBLBody];
+    const wheelBodys = [wheelFLBody, wheelFRBody, wheelBLBody, wheelBRBody];
+
+    // Create front axes for steer
+    const axelFLBodyDesc = RigidBodyDesc.dynamic();
+    axelFLBodyDesc.setTranslation(wheelFL.position.x, wheelFL.position.y, wheelBL.position.z);
+    axelFLBodyDesc.setCanSleep(false);
+    axelFLBodyDesc.setEnabled(true);
+    const axelFLBody = this._exp.physicWorld.instance.createRigidBody(axelFLBodyDesc);
+
+    const axelFLColliderDesc = ColliderDesc.cuboid(0.1, 0.1, 0.1);
+    axelFLColliderDesc.setMass(1);
+    axelFLColliderDesc.setCollisionGroups(589823);
+
+    this._exp.physicWorld.instance.createCollider(axelFLColliderDesc, axelFLBody);
 
     // Joint wheels to car body
-    const wheelFLJoint = this._exp.physicWorld.instance.createImpulseJoint(
-      JointData.revolute(wheelFL.position, new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
+
+    const axelFLJoint = this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(wheelFL.position, new Vector3(0, 0, 0), new Vector3(0, 1, 0)),
       carBody,
+      axelFLBody,
+      true,
+    ) as RevoluteImpulseJoint;
+    axelFLJoint.configureMotorModel(MotorModel.ForceBased);
+
+    const wheelFLJoint = this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
+      axelFLBody,
       wheelFLBody,
       true,
     ) as RevoluteImpulseJoint;
@@ -162,11 +198,7 @@ export class Car {
       true,
     ) as RevoluteImpulseJoint;
 
-    const wheelJoints = [wheelFLJoint, wheelFRJoint, wheelBLJoint, wheelBRJoint];
-
-    for (const j of wheelJoints) {
-      j.configureMotorVelocity(2, 1);
-    }
+    const wheelJoints = [axelFLJoint, wheelFRJoint, wheelBLJoint, wheelBRJoint];
 
     return { mesh, wheels, carBody, wheelBodys, wheelJoints };
   }
@@ -181,5 +213,35 @@ export class Car {
       this.car.wheels[i].position.copy(this.car.wheelBodys[i].translation());
       this.car.wheels[i].quaternion.copy(this.car.wheelBodys[i].rotation());
     }
+
+    this._steer = 0;
+
+    if (this._exp.keyboardCtrl.keyMap.KeyA) {
+      this._steer += 0.6;
+    }
+    if (this._exp.keyboardCtrl.keyMap.KeyD) {
+      this._steer -= 0.6;
+    }
+    this.car.wheelJoints[0].configureMotorPosition(this._steer, 100, 10);
+
+    this._velocity = 0;
+    let factor = 2.0;
+
+    const forward = this._exp.keyboardCtrl.keyMap.KeyW;
+    const backward = this._exp.keyboardCtrl.keyMap.KeyS;
+
+    if (forward) {
+      this._velocity = 40;
+      factor = 2.0;
+    } else if (backward) {
+      this._velocity = -18;
+      factor = 2.0;
+    } else {
+      this._velocity = 0.0;
+      factor = 20;
+    }
+
+    this.car.wheelJoints[2].configureMotorVelocity(this._velocity, factor);
+    this.car.wheelJoints[3].configureMotorVelocity(this._velocity, factor);
   }
 }
