@@ -15,6 +15,8 @@ export class Car {
 
   private _pane: FolderApi;
 
+  private _keyMap: { [key: string]: boolean } = {};
+
   public car: ReturnType<typeof this._initModel>;
 
   private _setupPane() {
@@ -23,6 +25,7 @@ export class Car {
   }
 
   private _initModel() {
+    // Model
     const model = this._exp.resources.items.carModel;
     const mesh = model.scene;
 
@@ -45,45 +48,127 @@ export class Car {
     this._exp.scene.attach(wheelBL);
     this._exp.scene.attach(wheelBR);
 
-    console.log(mesh);
-
     const wheels = [wheelFL, wheelFR, wheelBL, wheelBR] as const;
+
+    for (const w of wheels) {
+      w.visible = false;
+    }
+
+    const controls = {
+      enabled: false,
+    };
 
     // Car body
     const carBodyDesc = RigidBodyDesc.dynamic();
     carBodyDesc.setTranslation(0, 3, 0);
     carBodyDesc.setCanSleep(false);
-    carBodyDesc.setEnabled(true);
+    carBodyDesc.setEnabled(false);
     const carBody = this._exp.physicWorld.instance.createRigidBody(carBodyDesc);
 
-    const carColliderDesc = ColliderDesc.cuboid(0.55, 1.25, 0.55);
-    carColliderDesc.setTranslation(0, 1.25, 0);
-    carColliderDesc.setRestitution(0.25);
+    const carColliderDesc = ColliderDesc.cuboid(1.55, 1.25, 0.55);
+    carColliderDesc.setTranslation(0, 1.5, 0);
+    carColliderDesc.setRestitution(0);
     carColliderDesc.setEnabled(true);
     this._exp.physicWorld.instance.createCollider(carColliderDesc, carBody);
 
+    this._pane.addBinding(controls, 'enabled', {}).on('change', (val) => {
+      carBody.setEnabled(val.value);
+    });
+
+    //
     const wheelFLBodyDesc = RigidBodyDesc.dynamic();
+    wheelFLBodyDesc.setTranslation(wheelFL.position.x, wheelFL.position.y, wheelFL.position.z);
     wheelFLBodyDesc.setCanSleep(false);
     const wheelFLBody = this._exp.physicWorld.instance.createRigidBody(wheelFLBodyDesc);
 
     const wheelFLColliderDesc = ColliderDesc.cylinder(0.23, 0.45);
-    wheelFLColliderDesc.setRotation(new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2));
-    wheelFLColliderDesc.setFriction(2);
+    wheelFLColliderDesc.setRotation(
+      new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
+    );
+    wheelFLColliderDesc.setFriction(0.2);
+    wheelFLColliderDesc.setMass(2);
     this._exp.physicWorld.instance.createCollider(wheelFLColliderDesc, wheelFLBody);
 
+    //
+    const wheelFRBodyDesc = RigidBodyDesc.dynamic();
+    wheelFRBodyDesc.setTranslation(wheelFR.position.x, wheelFR.position.y, wheelFR.position.z);
+    wheelFRBodyDesc.setCanSleep(false);
+    const wheelFRBody = this._exp.physicWorld.instance.createRigidBody(wheelFRBodyDesc);
+
+    const wheelFRColliderDesc = ColliderDesc.cylinder(0.23, 0.45);
+    wheelFRColliderDesc.setRotation(
+      new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
+    );
+    wheelFRColliderDesc.setFriction(0.2);
+    wheelFRColliderDesc.setMass(2);
+    this._exp.physicWorld.instance.createCollider(wheelFRColliderDesc, wheelFRBody);
+
+    //
+    const wheelBLBodyDesc = RigidBodyDesc.dynamic();
+    wheelBLBodyDesc.setTranslation(wheelBL.position.x, wheelBL.position.y, wheelBL.position.z);
+    wheelBLBodyDesc.setCanSleep(false);
+    const wheelBLBody = this._exp.physicWorld.instance.createRigidBody(wheelBLBodyDesc);
+
+    const wheelBLColliderDesc = ColliderDesc.cylinder(0.23, 0.45);
+    wheelBLColliderDesc.setRotation(
+      new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
+    );
+    wheelBLColliderDesc.setFriction(0.2);
+    wheelBLColliderDesc.setMass(2);
+    this._exp.physicWorld.instance.createCollider(wheelBLColliderDesc, wheelBLBody);
+
+    //
+    const wheelBRBodyDesc = RigidBodyDesc.dynamic();
+    wheelBRBodyDesc.setTranslation(wheelBR.position.x, wheelBR.position.y, wheelBR.position.z);
+    wheelBRBodyDesc.setCanSleep(false);
+    const wheelBRBody = this._exp.physicWorld.instance.createRigidBody(wheelBRBodyDesc);
+
+    const wheelBRColliderDesc = ColliderDesc.cylinder(0.23, 0.45);
+    wheelBRColliderDesc.setRotation(
+      new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
+    );
+    wheelBRColliderDesc.setFriction(0.2);
+    wheelBRColliderDesc.setMass(2);
+    this._exp.physicWorld.instance.createCollider(wheelBRColliderDesc, wheelBRBody);
+
+    const wheelBodys = [wheelFLBody, wheelFRBody, wheelBLBody];
+
     // Joint wheels to car body
-    const m = this._exp.physicWorld.instance.createImpulseJoint(
+    const wheelFLJoint = this._exp.physicWorld.instance.createImpulseJoint(
       JointData.revolute(wheelFL.position, new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
       carBody,
       wheelFLBody,
       true,
     ) as RevoluteImpulseJoint;
 
-    m.configureMotorVelocity(20, 2);
+    const wheelFRJoint = this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(wheelFR.position, new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
+      carBody,
+      wheelFRBody,
+      true,
+    ) as RevoluteImpulseJoint;
 
-    const wheelBodys = [wheelFLBody];
+    const wheelBLJoint = this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(wheelBL.position, new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
+      carBody,
+      wheelBLBody,
+      true,
+    ) as RevoluteImpulseJoint;
 
-    return { mesh, wheels, carBody, wheelBodys };
+    const wheelBRJoint = this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(wheelBR.position, new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
+      carBody,
+      wheelBRBody,
+      true,
+    ) as RevoluteImpulseJoint;
+
+    const wheelJoints = [wheelFLJoint, wheelFRJoint, wheelBLJoint, wheelBRJoint];
+
+    for (const j of wheelJoints) {
+      j.configureMotorVelocity(2, 1);
+    }
+
+    return { mesh, wheels, carBody, wheelBodys, wheelJoints };
   }
 
   public update() {
@@ -91,13 +176,10 @@ export class Car {
     this.car.mesh.position.copy(this.car.carBody.translation());
     this.car.mesh.quaternion.copy(this.car.carBody.rotation());
 
+    // Update wheels
     for (let i = 0; i < this.car.wheelBodys.length; i++) {
       this.car.wheels[i].position.copy(this.car.wheelBodys[i].translation());
       this.car.wheels[i].quaternion.copy(this.car.wheelBodys[i].rotation());
-    }
-
-    // Update wheels
-    for (const w of this.car.wheels) {
     }
   }
 }
