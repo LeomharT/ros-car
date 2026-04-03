@@ -58,10 +58,6 @@ export class Car {
 
     const wheels = [wheelFL, wheelFR, wheelBL, wheelBR] as const;
 
-    for (const w of wheels) {
-      w.visible = false;
-    }
-
     const controls = {
       enabled: false,
     };
@@ -250,7 +246,7 @@ export class Car {
     const backward = this._exp.keyboardCtrl.keyMap.KeyS;
 
     if (forward) {
-      this._velocity = 40;
+      this._velocity = 36;
       factor = 2.0;
     } else if (backward) {
       this._velocity = -18;
