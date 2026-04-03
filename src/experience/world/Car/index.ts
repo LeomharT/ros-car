@@ -91,7 +91,7 @@ export class Car {
     wheelFLColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelFLColliderDesc.setFriction(1.0);
+    wheelFLColliderDesc.setFriction(0.8);
     wheelFLColliderDesc.setMass(2);
     wheelFLColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelFLColliderDesc, wheelFLBody);
@@ -106,7 +106,7 @@ export class Car {
     wheelFRColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelFRColliderDesc.setFriction(1.0);
+    wheelFRColliderDesc.setFriction(0.8);
     wheelFRColliderDesc.setMass(2);
     wheelFRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelFRColliderDesc, wheelFRBody);
@@ -121,7 +121,7 @@ export class Car {
     wheelBLColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelBLColliderDesc.setFriction(1.0);
+    wheelBLColliderDesc.setFriction(0.8);
     wheelBLColliderDesc.setMass(2);
     wheelBLColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBLColliderDesc, wheelBLBody);
@@ -136,7 +136,7 @@ export class Car {
     wheelBRColliderDesc.setRotation(
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
-    wheelBRColliderDesc.setFriction(1.0);
+    wheelBRColliderDesc.setFriction(0.8);
     wheelBRColliderDesc.setMass(2);
     wheelBRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBRColliderDesc, wheelBRBody);
@@ -231,10 +231,10 @@ export class Car {
     this._steer = 0;
 
     if (this._exp.keyboardCtrl.keyMap.KeyA) {
-      this._steer += 0.6;
+      this._steer += 0.5;
     }
     if (this._exp.keyboardCtrl.keyMap.KeyD) {
-      this._steer -= 0.6;
+      this._steer -= 0.5;
     }
     this.car.wheelJoints[0].configureMotorPosition(this._steer, 100, 10);
     this.car.wheelJoints[1].configureMotorPosition(this._steer, 100, 10);
@@ -253,7 +253,7 @@ export class Car {
       factor = 2.0;
     } else {
       this._velocity = 0.0;
-      factor = 20;
+      factor = 60;
     }
 
     this.car.wheelJoints[2].configureMotorVelocity(this._velocity, factor);
