@@ -78,7 +78,7 @@ export class Car {
     carColliderDesc.setTranslation(0, 1.5, 0);
     carColliderDesc.setRestitution(0);
     carColliderDesc.setEnabled(true);
-    carColliderDesc.setCollisionGroups(131073);
+    carColliderDesc.setCollisionGroups(0x00020001);
     this._exp.physicWorld.instance.createCollider(carColliderDesc, carBody);
 
     this._pane.addBinding(controls, 'enabled', {}).on('change', (val) => {
@@ -156,9 +156,19 @@ export class Car {
 
     const axelFLColliderDesc = ColliderDesc.cuboid(0.1, 0.1, 0.1);
     axelFLColliderDesc.setMass(1);
-    axelFLColliderDesc.setCollisionGroups(589823);
-
+    axelFLColliderDesc.setCollisionGroups(0x00080000);
     this._exp.physicWorld.instance.createCollider(axelFLColliderDesc, axelFLBody);
+
+    const axelFRBodyDesc = RigidBodyDesc.dynamic();
+    axelFRBodyDesc.setTranslation(wheelFR.position.x, wheelFR.position.y, wheelFR.position.y);
+    axelFRBodyDesc.setCanSleep(false);
+    axelFRBodyDesc.setEnabled(true);
+    const axelFRBody = this._exp.physicWorld.instance.createRigidBody(axelFRBodyDesc);
+
+    const axelFRColliderDesc = ColliderDesc.cuboid(0.1, 0.1, 0.1);
+    axelFRColliderDesc.setMass(1);
+    axelFRColliderDesc.setCollisionGroups(0x00080001);
+    this._exp.physicWorld.instance.createCollider(axelFRColliderDesc, axelFRBody);
 
     // Joint wheels to car body
 
@@ -170,16 +180,24 @@ export class Car {
     ) as RevoluteImpulseJoint;
     axelFLJoint.configureMotorModel(MotorModel.ForceBased);
 
-    const wheelFLJoint = this._exp.physicWorld.instance.createImpulseJoint(
+    const axelFRJoint = this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(wheelFR.position, new Vector3(0, 0, 0), new Vector3(0, 1, 0)),
+      carBody,
+      axelFRBody,
+      true,
+    ) as RevoluteImpulseJoint;
+    axelFRJoint.configureMotorModel(MotorModel.ForceBased);
+
+    this._exp.physicWorld.instance.createImpulseJoint(
       JointData.revolute(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
       axelFLBody,
       wheelFLBody,
       true,
     ) as RevoluteImpulseJoint;
 
-    const wheelFRJoint = this._exp.physicWorld.instance.createImpulseJoint(
-      JointData.revolute(wheelFR.position, new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
-      carBody,
+    this._exp.physicWorld.instance.createImpulseJoint(
+      JointData.revolute(new Vector3(0, 0, 0), new Vector3(0, 0, 0), new Vector3(0, 0, -1)),
+      axelFRBody,
       wheelFRBody,
       true,
     ) as RevoluteImpulseJoint;
@@ -198,7 +216,7 @@ export class Car {
       true,
     ) as RevoluteImpulseJoint;
 
-    const wheelJoints = [axelFLJoint, wheelFRJoint, wheelBLJoint, wheelBRJoint];
+    const wheelJoints = [axelFLJoint, axelFRJoint, wheelBLJoint, wheelBRJoint];
 
     return { mesh, wheels, carBody, wheelBodys, wheelJoints };
   }
@@ -223,6 +241,7 @@ export class Car {
       this._steer -= 0.6;
     }
     this.car.wheelJoints[0].configureMotorPosition(this._steer, 100, 10);
+    this.car.wheelJoints[1].configureMotorPosition(this._steer, 100, 10);
 
     this._velocity = 0;
     let factor = 2.0;
