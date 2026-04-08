@@ -92,7 +92,7 @@ export class Car {
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
     wheelFLColliderDesc.setFriction(0.8);
-    wheelFLColliderDesc.setMass(2);
+    wheelFLColliderDesc.setMass(1.12);
     wheelFLColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelFLColliderDesc, wheelFLBody);
 
@@ -107,7 +107,7 @@ export class Car {
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
     wheelFRColliderDesc.setFriction(0.8);
-    wheelFRColliderDesc.setMass(2);
+    wheelFRColliderDesc.setMass(1.12);
     wheelFRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelFRColliderDesc, wheelFRBody);
 
@@ -122,7 +122,7 @@ export class Car {
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
     wheelBLColliderDesc.setFriction(0.8);
-    wheelBLColliderDesc.setMass(2);
+    wheelBLColliderDesc.setMass(1.12);
     wheelBLColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBLColliderDesc, wheelBLBody);
 
@@ -137,7 +137,7 @@ export class Car {
       new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), Math.PI / 2),
     );
     wheelBRColliderDesc.setFriction(0.8);
-    wheelBRColliderDesc.setMass(2);
+    wheelBRColliderDesc.setMass(1.12);
     wheelBRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBRColliderDesc, wheelBRBody);
 
