@@ -145,7 +145,7 @@ export class Car {
 
     // Create front axes for steer
     const axelFLBodyDesc = RigidBodyDesc.dynamic();
-    axelFLBodyDesc.setTranslation(wheelFL.position.x, wheelFL.position.y, wheelBL.position.z);
+    axelFLBodyDesc.setTranslation(wheelFL.position.x, wheelFL.position.y, wheelFL.position.z);
     axelFLBodyDesc.setCanSleep(false);
     axelFLBodyDesc.setEnabled(true);
     const axelFLBody = this._exp.physicWorld.instance.createRigidBody(axelFLBodyDesc);
@@ -156,7 +156,7 @@ export class Car {
     this._exp.physicWorld.instance.createCollider(axelFLColliderDesc, axelFLBody);
 
     const axelFRBodyDesc = RigidBodyDesc.dynamic();
-    axelFRBodyDesc.setTranslation(wheelFR.position.x, wheelFR.position.y, wheelFR.position.y);
+    axelFRBodyDesc.setTranslation(wheelFR.position.x, wheelFR.position.y, wheelFR.position.z);
     axelFRBodyDesc.setCanSleep(false);
     axelFRBodyDesc.setEnabled(true);
     const axelFRBody = this._exp.physicWorld.instance.createRigidBody(axelFRBodyDesc);
