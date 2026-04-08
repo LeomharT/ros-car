@@ -231,10 +231,10 @@ export class Car {
     this._steer = 0;
 
     if (this._exp.keyboardCtrl.keyMap.KeyA) {
-      this._steer += 0.5;
+      this._steer += 0.6;
     }
     if (this._exp.keyboardCtrl.keyMap.KeyD) {
-      this._steer -= 0.5;
+      this._steer -= 0.6;
     }
     this.car.wheelJoints[0].configureMotorPosition(this._steer, 100, 10);
     this.car.wheelJoints[1].configureMotorPosition(this._steer, 100, 10);
@@ -246,7 +246,7 @@ export class Car {
     const backward = this._exp.keyboardCtrl.keyMap.KeyS;
 
     if (forward) {
-      this._velocity = 36;
+      this._velocity = 20;
       factor = 2.0;
     } else if (backward) {
       this._velocity = -18;
