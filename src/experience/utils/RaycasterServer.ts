@@ -1,15 +1,43 @@
-import { Object3D, Raycaster, Vector2 } from 'three';
+import { Object3D, Raycaster, Vector2, type Intersection } from 'three';
 import type { Experience } from '../Experience';
+
+type RaycasterHandlers = {
+  onEnter?: () => void;
+  onLeave?: () => void;
+  onHover?: () => void;
+  onClick?: () => void;
+};
 
 export class RaycasterServer {
   constructor(exp: Experience) {
     this._exp = exp;
     this._raycaster = new Raycaster();
     this._cursro = new Vector2();
+    this._intersects = [];
+    this._lastInteractive = null;
+    this._handles = new Map();
 
-    window.addEventListener('pointermove', (e) => {
+    this._exp.canvas.addEventListener('pointermove', (e) => {
       this._cursro.x = (e.clientX / window.innerWidth) * 2 - 1;
       this._cursro.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      this._intersects = this.pick(this._exp.scene.children);
+
+      if (this._intersects.length) {
+        const target = this._resolveRegisteredTarget(this._intersects[0].object);
+
+        if (target) {
+          this._handles.get(target)?.onEnter?.();
+        }
+        console.log(target);
+      }
+    });
+
+    this._exp.canvas.addEventListener('pointerdown', () => {
+      if (this._intersects.length) {
+        const target = this._resolveRegisteredTarget(this._intersects[0].object);
+        target && this._handles.get(target)?.onClick?.();
+      }
     });
   }
 
@@ -19,8 +47,29 @@ export class RaycasterServer {
 
   private _cursro: Vector2;
 
+  private _intersects: Array<Intersection<Object3D>>;
+
+  private _lastInteractive: Object3D | null;
+
+  private _handles: Map<Object3D, RaycasterHandlers>;
+
+  public register(target: Object3D, handles: RaycasterHandlers) {
+    this._handles.set(target, handles);
+  }
+
+  public unregister(target: Object3D) {
+    this._handles.delete(target);
+  }
+
   public pick(target: Object3D[]) {
     this._raycaster.setFromCamera(this._cursro, this._exp.camera.instance);
     return this._raycaster.intersectObjects(target, true);
+  }
+
+  private _resolveRegisteredTarget(target: Object3D | null): Object3D | null {
+    if (!target) return null;
+    if (this._handles.has(target)) return target;
+
+    return this._resolveRegisteredTarget(target.parent);
   }
 }
