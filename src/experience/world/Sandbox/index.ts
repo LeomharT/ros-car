@@ -1,6 +1,6 @@
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
-import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
+import { Box3, Mesh, MeshStandardMaterial, Object3D, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
 
 export class Sandbox {
@@ -10,13 +10,22 @@ export class Sandbox {
     this.mesh = this._initModel();
     this.floor = this._initFloor();
     this.barrier = this._initBarrier();
-
     this._exp.scene.add(this.mesh);
 
     this.pane = this._setupPane();
   }
 
   private _exp: Experience;
+
+  private _handlers = new Map<
+    Object3D,
+    {
+      onEnter?: () => void;
+      onLeave?: () => void;
+      onHover?: () => void;
+      onClick?: () => void;
+    }
+  >();
 
   public mesh: Group;
 
@@ -106,5 +115,21 @@ export class Sandbox {
       .play();
   }
 
-  public update() {}
+  private _updateBarrierPick() {
+    const isPicked = !!this._exp.raycasterServer.pick([this.barrier.mesh]).length;
+
+    if (isPicked) {
+      this._exp.canvas.style.cursor = 'pointer';
+      this._exp.canvas.onclick = () => {
+        this._toggleBarrier(this.barrier.open);
+      };
+    } else {
+      this._exp.canvas.style.cursor = 'default';
+      if (this._exp.canvas.onclick) this._exp.canvas.onclick = null;
+    }
+  }
+
+  public update() {
+    this._updateBarrierPick();
+  }
 }

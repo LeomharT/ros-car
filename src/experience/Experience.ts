@@ -3,6 +3,7 @@ import Camera from './Camera';
 import Renderer from './Renderer';
 import { Debug } from './ui/Debug';
 import { KeyboardControls } from './utils/KeyboardControl';
+import { RaycasterServer } from './utils/RaycasterServer';
 import Resources from './utils/Resources';
 import Sizes from './utils/Sizes';
 import Time from './utils/Time';
@@ -25,6 +26,7 @@ export class Experience {
     this.camera = new Camera(this);
     this.physicWorld = new PhysicWorld(this);
     this.world = new World(this);
+    this.raycasterServer = new RaycasterServer(this);
 
     // Events
     this.time.addEventListener('tick', this.update);
@@ -54,6 +56,8 @@ export class Experience {
   public physicWorld: PhysicWorld;
 
   public world: World;
+
+  public raycasterServer: RaycasterServer;
 
   public update = () => {
     this.debug.fpsGraph.begin();
