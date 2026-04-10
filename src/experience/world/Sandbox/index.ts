@@ -13,8 +13,6 @@ export class Sandbox {
     this._exp.scene.add(this.mesh);
 
     this.pane = this._setupPane();
-
-    this._addBarrierEvent();
   }
 
   private _exp: Experience;
@@ -45,7 +43,7 @@ export class Sandbox {
     const barrier_f = pane.addFolder({ title: '🚧 Barrier' });
     const button = barrier_f
       .addButton({ label: 'Toggle Barrier', title: 'Toggle' })
-      .on('click', () => this._toggleBarrier(this.barrier.open));
+      .on('click', () => this._toggleBarrier());
 
     return { pane, button };
   }
@@ -67,6 +65,18 @@ export class Sandbox {
 
     const mesh = this.mesh.getObjectByName('杠') as Group;
 
+    this._exp.raycasterServer.register(mesh, {
+      onClick: () => {
+        this._toggleBarrier();
+      },
+      onEnter: () => {
+        this._exp.canvas.style.cursor = 'pointer';
+      },
+      onLeave: () => {
+        this._exp.canvas.style.cursor = 'default';
+      },
+    });
+
     const box = new Box3();
     box.setFromObject(mesh);
 
@@ -87,8 +97,8 @@ export class Sandbox {
     return { mesh, body, collider, open };
   }
 
-  private _toggleBarrier(open: boolean) {
-    this.barrier.open = !open;
+  private _toggleBarrier() {
+    this.barrier.open = !this.barrier.open;
     const target = this.barrier.open ? -Math.PI * 1.25 : -Math.PI * 0.75;
 
     gsap
@@ -105,25 +115,6 @@ export class Sandbox {
         },
       })
       .play();
-  }
-
-  private _addBarrierEvent() {
-    this._exp.raycasterServer.register(this.barrier.mesh, {
-      onClick() {
-        console.log('Click on the barrier');
-      },
-    });
-
-    // const isPicked = !!this._exp.raycasterServer.pick([this.barrier.mesh]).length;
-    // if (isPicked) {
-    //   this._exp.canvas.style.cursor = 'pointer';
-    //   this._exp.canvas.onclick = () => {
-    //     this._toggleBarrier(this.barrier.open);
-    //   };
-    // } else {
-    //   this._exp.canvas.style.cursor = 'default';
-    //   if (this._exp.canvas.onclick) this._exp.canvas.onclick = null;
-    // }
   }
 
   public update() {}

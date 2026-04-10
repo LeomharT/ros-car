@@ -27,9 +27,19 @@ export class RaycasterServer {
         const target = this._resolveRegisteredTarget(this._intersects[0].object);
 
         if (target) {
-          this._handles.get(target)?.onEnter?.();
+          if (target !== this._lastInteractive) {
+            this._handles.get(target)?.onEnter?.();
+            this._lastInteractive = target;
+          }
+          if (target === this._lastInteractive) {
+            this._handles.get(target)?.onHover?.();
+          }
         }
-        console.log(target);
+
+        if (!target && this._lastInteractive) {
+          this._handles.get(this._lastInteractive)?.onLeave?.();
+          this._lastInteractive = null;
+        }
       }
     });
 
