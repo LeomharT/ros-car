@@ -13,11 +13,14 @@ export class RaycasterServer {
     this._exp = exp;
     this._raycaster = new Raycaster();
     this._cursro = new Vector2();
+    this._enabled = true;
     this._intersects = [];
     this._lastInteractive = null;
     this._handles = new Map();
 
     this._exp.canvas.addEventListener('pointermove', (e) => {
+      if (!this._enabled) return;
+
       this._cursro.x = (e.clientX / window.innerWidth) * 2 - 1;
       this._cursro.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
@@ -43,11 +46,18 @@ export class RaycasterServer {
       }
     });
 
-    this._exp.canvas.addEventListener('pointerdown', () => {
+    this._exp.canvas.addEventListener('pointerdown', (e) => {
+      this._enabled = false;
+      this._exp.canvas.setPointerCapture(e.pointerId);
+
       if (this._intersects.length) {
         const target = this._resolveRegisteredTarget(this._intersects[0].object);
         target && this._handles.get(target)?.onClick?.();
       }
+    });
+
+    this._exp.canvas.addEventListener('pointerup', () => {
+      this._enabled = true;
     });
   }
 
@@ -56,6 +66,8 @@ export class RaycasterServer {
   private _raycaster: Raycaster;
 
   private _cursro: Vector2;
+
+  private _enabled: boolean;
 
   private _intersects: Array<Intersection<Object3D>>;
 
