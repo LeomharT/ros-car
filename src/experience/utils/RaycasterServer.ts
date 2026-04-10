@@ -24,7 +24,7 @@ export class RaycasterServer {
       this._cursro.x = (e.clientX / window.innerWidth) * 2 - 1;
       this._cursro.y = -(e.clientY / window.innerHeight) * 2 + 1;
 
-      this._intersects = this.pick(this._exp.scene.children);
+      this._intersects = this.pick(Array.from(this._handles.keys()));
 
       if (this._intersects.length) {
         const target = this._resolveRegisteredTarget(this._intersects[0].object);
@@ -40,6 +40,11 @@ export class RaycasterServer {
         }
 
         if (!target && this._lastInteractive) {
+          this._handles.get(this._lastInteractive)?.onLeave?.();
+          this._lastInteractive = null;
+        }
+      } else {
+        if (this._lastInteractive) {
           this._handles.get(this._lastInteractive)?.onLeave?.();
           this._lastInteractive = null;
         }
