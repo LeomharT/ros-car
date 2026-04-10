@@ -52,7 +52,7 @@ export default class Camera {
       0.1,
       1000,
     );
-    camera.position.set(12, 12, 12);
+    camera.position.set(0, 12, 20);
     this._exp.scene.add(camera);
 
     return camera;
