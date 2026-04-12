@@ -2,6 +2,7 @@ import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
 import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
+import { CautionTape } from '../CautionTape';
 
 export class Sandbox {
   constructor(exp: Experience) {
@@ -10,9 +11,10 @@ export class Sandbox {
     this.mesh = this._initModel();
     this.floor = this._initFloor();
     this.barrier = this._initBarrier();
-    this._exp.scene.add(this.mesh);
-
+    this.parkingGround = this._initParkingGround();
     this.pane = this._setupPane();
+
+    this._exp.scene.add(this.mesh);
   }
 
   private _exp: Experience;
@@ -22,6 +24,8 @@ export class Sandbox {
   public floor: ReturnType<typeof this._initFloor>;
 
   public barrier: ReturnType<typeof this._initBarrier>;
+
+  public parkingGround: ReturnType<typeof this._initParkingGround>;
 
   public pane: ReturnType<typeof this._setupPane>;
 
@@ -97,6 +101,16 @@ export class Sandbox {
     return { mesh, body, collider, open };
   }
 
+  private _initParkingGround() {
+    const tape = new CautionTape(2, 2, '#f0f5ff');
+    tape.mesh.position.y = 5;
+    tape.mesh.position.z = 5;
+
+    this._exp.scene.add(tape.mesh);
+
+    return { tape };
+  }
+
   private _toggleBarrier() {
     this.barrier.open = !this.barrier.open;
     const target = this.barrier.open ? -Math.PI * 1.25 : -Math.PI * 0.75;
@@ -117,5 +131,7 @@ export class Sandbox {
       .play();
   }
 
-  public update() {}
+  public update() {
+    this.parkingGround.tape.update();
+  }
 }
