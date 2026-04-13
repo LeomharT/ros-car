@@ -102,9 +102,23 @@ export class Sandbox {
   }
 
   private _initParkingGround() {
-    const tape = new CautionTape(2, 2, '#f0f5ff');
-    tape.mesh.position.y = 5;
-    tape.mesh.position.z = 5;
+    const mesh = this.mesh.getObjectByName('p地面') as Mesh;
+    this._exp.raycasterServer.register(mesh, {
+      onEnter: () => {
+        this._exp.canvas.style.cursor = 'pointer';
+      },
+      onLeave: () => {
+        this._exp.canvas.style.cursor = 'default';
+      },
+      onClick: () => {
+        console.log('Click on P ground');
+      },
+    });
+
+    const tape = new CautionTape(3.66, 4.72, '#f0f5ff');
+    tape.mesh.position.x = mesh.position.x;
+    tape.mesh.position.y = 1;
+    tape.mesh.position.z = mesh.position.z / 2.7;
 
     this._exp.scene.add(tape.mesh);
 
