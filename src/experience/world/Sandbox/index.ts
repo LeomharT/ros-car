@@ -106,9 +106,23 @@ export class Sandbox {
     this._exp.raycasterServer.register(mesh, {
       onEnter: () => {
         this._exp.canvas.style.cursor = 'pointer';
+        gsap
+          .to(tape.mesh.position, {
+            y: 1.0,
+            ease: 'back.out',
+            duration: 0.5,
+          })
+          .play();
       },
       onLeave: () => {
         this._exp.canvas.style.cursor = 'default';
+        gsap
+          .to(tape.mesh.position, {
+            y: -1.0,
+            ease: 'back.in',
+            duration: 0.5,
+          })
+          .play();
       },
       onClick: () => {
         console.log('Click on P ground');
@@ -117,7 +131,7 @@ export class Sandbox {
 
     const tape = new CautionTape(3.66, 4.72, '#f0f5ff');
     tape.mesh.position.x = mesh.position.x;
-    tape.mesh.position.y = 1;
+    tape.mesh.position.y = -1;
     tape.mesh.position.z = mesh.position.z / 2.7;
 
     this._exp.scene.add(tape.mesh);
