@@ -18,11 +18,10 @@ void main() {
   vec3  color  = uColor;
   vec2  center = vec2(0.5);
 
-
   vec2 uv = vUv;
 
-  alpha += step(uv.y, 0.1);
-  alpha += 1.0 - step(uv.y, 0.9);
+  alpha += step(uv.y, 0.15);
+  alpha += 1.0 - step(uv.y, 0.85);
   
   uv.y /= aspect;
 

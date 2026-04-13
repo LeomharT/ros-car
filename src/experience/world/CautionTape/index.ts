@@ -12,6 +12,11 @@ import {
 import fragmentShader from './shader/fragment.glsl?raw';
 import vertexShader from './shader/vertex.glsl?raw';
 
+type TapeAnimation = {
+  up?: () => void;
+  down?: () => void;
+};
+
 export class CautionTape {
   constructor(w: number, h: number, color: ColorRepresentation = 0xffffff) {
     this._uniforms = this._setupUniforms();
@@ -21,6 +26,8 @@ export class CautionTape {
   }
 
   public mesh: Group;
+
+  public animation?: TapeAnimation;
 
   private _uniforms: ReturnType<typeof this._setupUniforms>;
 
@@ -76,6 +83,14 @@ export class CautionTape {
     group.add(top, bottom, left, right);
 
     return group;
+  }
+
+  public up() {
+    this.animation?.up?.();
+  }
+
+  public down() {
+    this.animation?.down?.();
   }
 
   public update() {
