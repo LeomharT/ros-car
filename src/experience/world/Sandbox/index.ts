@@ -68,8 +68,18 @@ export class Sandbox {
   }
 
   private _initWall() {
-    const wallABodyDesc = RigidBodyDesc.fixed();
-    wallABodyDesc.setTranslation(0, 0, 0);
+    const buildWall = (pos: Vector3, size: Vector3) => {
+      const bodyDesc = RigidBodyDesc.fixed();
+      bodyDesc.setTranslation(pos.x, pos.y, pos.z);
+      const body = this._exp.physicWorld.instance.createRigidBody(bodyDesc);
+
+      const colliderDesc = ColliderDesc.cuboid(size.x, size.y, size.z);
+      this._exp.physicWorld.instance.createCollider(colliderDesc, body);
+    };
+    // Wall A
+    buildWall(new Vector3(0, 1.55, 11.88), new Vector3(10, 1.55, 0.1));
+    // Wall B
+    buildWall(new Vector3(0, 1.55, 11.88), new Vector3(10, 1.55, 0.1));
   }
 
   private _initBarrier() {
