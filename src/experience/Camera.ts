@@ -32,6 +32,8 @@ export default class Camera {
   private _setupControls() {
     const controls1 = new OrbitControls(this.instance, this._exp.canvas);
     controls1.enableDamping = true;
+    controls1.dampingFactor = 0.08;
+    controls1.rotateSpeed = 0.65;
     controls1.enableRotate = true;
     controls1.enablePan = true;
     controls1.enableZoom = false;

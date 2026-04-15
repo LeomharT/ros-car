@@ -10,6 +10,7 @@ export class Sandbox {
 
     this.mesh = this._initModel();
     this.floor = this._initFloor();
+    this.walls = this._initWall();
     this.barrier = this._initBarrier();
     this.parkingGround = this._initParkingGround();
     this.pane = this._setupPane();
@@ -22,6 +23,8 @@ export class Sandbox {
   public mesh: Group;
 
   public floor: ReturnType<typeof this._initFloor>;
+
+  public walls: ReturnType<typeof this._initWall>;
 
   public barrier: ReturnType<typeof this._initBarrier>;
 
@@ -62,6 +65,11 @@ export class Sandbox {
     const collider = this._exp.physicWorld.instance.createCollider(colliderDesc, body);
 
     return { mesh, body, collider };
+  }
+
+  private _initWall() {
+    const wallABodyDesc = RigidBodyDesc.fixed();
+    wallABodyDesc.setTranslation(0, 0, 0);
   }
 
   private _initBarrier() {
