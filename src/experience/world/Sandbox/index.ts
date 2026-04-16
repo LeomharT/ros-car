@@ -1,5 +1,6 @@
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
+import { toast } from 'sonner';
 import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
 import { CautionTape } from '../CautionTape';
@@ -135,7 +136,9 @@ export class Sandbox {
         tape.down();
       },
       onClick: () => {
-        console.log('Click on P ground');
+        toast.info('Hello World, You Click On the Board', {
+          position: 'top-center',
+        });
       },
     });
 

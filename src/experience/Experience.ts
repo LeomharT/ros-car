@@ -1,6 +1,7 @@
 import { AxesHelper, Color, Scene } from 'three';
 import Camera from './Camera';
 import Renderer from './Renderer';
+import { AppShell } from './ui/AppShell';
 import { Debug } from './ui/Debug';
 import { KeyboardControls } from './utils/KeyboardControl';
 import { RaycasterServer } from './utils/RaycasterServer';
@@ -11,10 +12,11 @@ import { PhysicWorld } from './world/PhysicWorld';
 import { World } from './world/World';
 
 export class Experience {
-  constructor() {
+  private constructor() {
     this.time = new Time();
     this.debug = new Debug();
     this.sizes = new Sizes();
+    this.appShell = AppShell.getInstance();
     this.resources = new Resources();
     this.keyboardCtrl = new KeyboardControls();
 
@@ -41,6 +43,12 @@ export class Experience {
 
   public sizes: Sizes;
 
+  public appShell: AppShell;
+
+  public resources: Resources;
+
+  public keyboardCtrl: KeyboardControls;
+
   public scene: Scene;
 
   public renderer: Renderer;
@@ -48,10 +56,6 @@ export class Experience {
   public camera: Camera;
 
   public canvas: HTMLCanvasElement;
-
-  public resources: Resources;
-
-  public keyboardCtrl: KeyboardControls;
 
   public physicWorld: PhysicWorld;
 
