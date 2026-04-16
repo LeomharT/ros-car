@@ -79,7 +79,11 @@ export class Sandbox {
     // Wall A
     buildWall(new Vector3(0, 1.55, 11.88), new Vector3(10, 1.55, 0.1));
     // Wall B
-    buildWall(new Vector3(0, 1.55, 11.88), new Vector3(10, 1.55, 0.1));
+    buildWall(new Vector3(9.9, 1.55, 0), new Vector3(0.1, 1.55, 11.75));
+    // Wall C
+    buildWall(new Vector3(0, 1.55, -11.88), new Vector3(10, 1.55, 0.1));
+    // Wall D
+    buildWall(new Vector3(-9.9, 1.55, 0), new Vector3(0.1, 1.55, 11.75));
   }
 
   private _initBarrier() {
