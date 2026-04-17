@@ -92,7 +92,7 @@ export class Sandbox {
 
     const mesh = this.mesh.getObjectByName('杠') as Group;
 
-    this._exp.raycasterServer.register(mesh, {
+    this._exp.picker.register(mesh, {
       onClick: () => {
         this._toggleBarrier();
       },
@@ -126,7 +126,7 @@ export class Sandbox {
 
   private _initParkingGround() {
     const mesh = this.mesh.getObjectByName('p地面') as Mesh;
-    this._exp.raycasterServer.register(mesh, {
+    this._exp.picker.register(mesh, {
       onEnter: () => {
         this._exp.canvas.style.cursor = 'pointer';
         tape.up();

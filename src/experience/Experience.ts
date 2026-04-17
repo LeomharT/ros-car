@@ -1,10 +1,10 @@
 import { AxesHelper, Color, Scene } from 'three';
 import Camera from './Camera';
 import Renderer from './Renderer';
-import { AppShell } from './ui/AppShell';
 import { Debug } from './ui/Debug';
+import { UIShell } from './ui/UIShell';
 import { KeyboardControls } from './utils/KeyboardControl';
-import { RaycasterServer } from './utils/RaycasterServer';
+import { Picker } from './utils/Picker';
 import Resources from './utils/Resources';
 import Sizes from './utils/Sizes';
 import Time from './utils/Time';
@@ -16,7 +16,7 @@ export class Experience {
     this.time = new Time();
     this.debug = new Debug();
     this.sizes = new Sizes();
-    this.appShell = AppShell.getInstance();
+    this.uiShell = UIShell.getInstance();
     this.resources = new Resources();
     this.keyboardCtrl = new KeyboardControls();
 
@@ -28,7 +28,7 @@ export class Experience {
     this.camera = new Camera(this);
     this.physicWorld = new PhysicWorld(this);
     this.world = new World(this);
-    this.raycasterServer = new RaycasterServer(this);
+    this.picker = new Picker(this);
 
     // Events
     this.time.addEventListener('tick', this.update);
@@ -43,7 +43,7 @@ export class Experience {
 
   public sizes: Sizes;
 
-  public appShell: AppShell;
+  public uiShell: UIShell;
 
   public resources: Resources;
 
@@ -61,7 +61,7 @@ export class Experience {
 
   public world: World;
 
-  public raycasterServer: RaycasterServer;
+  public picker: Picker;
 
   public update = () => {
     this.debug.fpsGraph.begin();

@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 
-export class AppShell {
+export class UIShell {
   private constructor() {
     this._initRoot();
   }
@@ -13,13 +13,17 @@ export class AppShell {
     document.body.append(el);
 
     const root = createRoot(el);
-    root.render(React.createElement(React.Fragment, { children: React.createElement(Toaster) }));
+    root.render(
+      React.createElement(React.Fragment, {
+        children: React.createElement(Toaster),
+      }),
+    );
   }
 
-  private static _instance: AppShell;
+  private static _instance: UIShell;
 
   public static getInstance() {
     if (this._instance) return this._instance;
-    return (this._instance = new AppShell());
+    return (this._instance = new UIShell());
   }
 }

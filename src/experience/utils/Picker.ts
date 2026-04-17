@@ -8,7 +8,7 @@ type RaycasterHandlers = {
   onClick?: () => void;
 };
 
-export class RaycasterServer {
+export class Picker {
   constructor(exp: Experience) {
     this._exp = exp;
     this._raycaster = new Raycaster();
