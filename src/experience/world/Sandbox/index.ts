@@ -1,3 +1,4 @@
+import { dialog } from '@/experience/ui/UIShell';
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
 import { toast } from 'sonner';
@@ -136,8 +137,10 @@ export class Sandbox {
         tape.down();
       },
       onClick: () => {
-        toast.info('Hello World, You Click On the Board', {
-          position: 'top-center',
+        toast('Hello World, You Click On the Board');
+        dialog({
+          title: 'Dialog Title',
+          content: 'Dialog Conent',
         });
       },
     });
