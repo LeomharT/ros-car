@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
     "@tweakpane/core": "^2.0.5",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -20,12 +21,21 @@
   },
   "dependencies": {
     "@dimforge/rapier3d": "^0.19.3",
+    "@fontsource-variable/geist": "^5.2.8",
+    "@tabler/icons-react": "^3.41.1",
     "@tweakpane/plugin-essentials": "^0.2.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "gsap": "^3.15.0",
+    "radix-ui": "^1.4.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "shadcn": "^4.3.0",
     "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.2",
     "three": "^0.184.0",
+    "tw-animate-css": "^1.4.0",
     "tweakpane": "^4.0.5"
   }
 }
