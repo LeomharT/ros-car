@@ -45,6 +45,7 @@ export class UIShell {
   }
 }
 
-export function dialog(args: DialogParams) {
-  UIShell.getInstance().dialog.current?.open(args);
-}
+export const dialog = {
+  open: (args: DialogParams) => UIShell.getInstance().dialog.current?.open(args),
+  close: () => UIShell.getInstance().dialog.current?.close(),
+};

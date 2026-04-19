@@ -138,9 +138,14 @@ export class Sandbox {
       },
       onClick: () => {
         toast('Hello World, You Click On the Board');
-        dialog({
+        dialog.open({
           title: 'Dialog Title',
           content: 'Dialog Conent',
+          onOk: async () => {
+            return new Promise((r) => {
+              setTimeout(r, 1000);
+            }).catch((e) => console.log('Oops errors!', e));
+          },
         });
       },
     });
