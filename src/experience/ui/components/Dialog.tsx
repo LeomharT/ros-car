@@ -9,15 +9,18 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
-import { useImperativeHandle, useState } from 'react';
+import React, { useImperativeHandle, useState } from 'react';
 
 export type DialogParams = {
   title?: string;
+  description?: React.ReactNode;
   content?: React.ReactNode;
   footer?: boolean;
   showCloseButton?: boolean;
   okText?: string;
   cancelText?: string;
+  okButtonProps?: React.ComponentProps<'button'>;
+  cancelButtonProps?: React.ComponentProps<'button'>;
   onOk?: () => Promise<unknown> | void;
 };
 
@@ -69,13 +72,16 @@ export function Dialog({ ref }: DialogProps) {
       <DialogContent showCloseButton={props?.showCloseButton}>
         <DialogHeader>
           <DialogTitle>{props?.title}</DialogTitle>
-          <DialogDescription>{props?.content}</DialogDescription>
+          <DialogDescription>{props?.description}</DialogDescription>
         </DialogHeader>
+        {props.content}
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">{props?.cancelText}</Button>
+            <Button variant="outline" {...props?.cancelButtonProps}>
+              {props?.cancelText}
+            </Button>
           </DialogClose>
-          <Button type="submit" disabled={loading} onClick={handleOnOk}>
+          <Button type="submit" disabled={loading} onClick={handleOnOk} {...props?.okButtonProps}>
             {loading && <Spinner />}
             {props?.okText}
           </Button>

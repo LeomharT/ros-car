@@ -1,3 +1,5 @@
+import ROSSystemInfo from '@/experience/ui/components/ROSSystemInfo';
+import { dialog } from '@/experience/ui/UIShell';
 import {
   ColliderDesc,
   JointData,
@@ -5,7 +7,8 @@ import {
   RevoluteImpulseJoint,
   RigidBodyDesc,
 } from '@dimforge/rapier3d';
-import { Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
+import React from 'react';
+import { Group, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
 import type { FolderApi } from 'tweakpane';
 import type { Experience } from '../../Experience';
 
@@ -35,13 +38,32 @@ export class Car {
   private _initModel() {
     // Model
     const model = this._exp.resources.items.carModel;
-    const mesh = model.scene;
+    const mesh = model.scene as Group;
 
     mesh.traverse((obj) => {
       if (obj instanceof Mesh && obj.material instanceof MeshStandardMaterial) {
         obj.material.fog = false;
       }
     });
+
+    this._exp.picker.register(mesh, {
+      onEnter: () => {
+        this._exp.canvas.style.cursor = 'pointer';
+      },
+      onLeave: () => {
+        this._exp.canvas.style.cursor = 'default';
+      },
+      onClick: () => {
+        dialog.open({
+          title: 'Product System Information',
+          content: React.createElement(ROSSystemInfo),
+          okButtonProps: {
+            hidden: true,
+          },
+        });
+      },
+    });
+
     this._exp.scene.add(mesh);
 
     // Wheels

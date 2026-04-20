@@ -8,9 +8,12 @@ export class UIShell {
   private constructor() {
     const root = this._initRoot();
 
+    this.el = root.el;
     this.dialog = root.dialogRef;
     this.alert = root.alertRef;
   }
+
+  public el: HTMLDivElement;
 
   public dialog: DialogRef;
 
@@ -40,7 +43,7 @@ export class UIShell {
       </React.StrictMode>,
     );
 
-    return { dialogRef, alertRef };
+    return { el, dialogRef, alertRef };
   }
 
   private static _instance: UIShell;
