@@ -1,7 +1,7 @@
-import { dialog } from '@/experience/ui/UIShell';
+import { alert } from '@/experience/ui/UIShell';
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
-import { toast } from 'sonner';
+import React from 'react';
 import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
 import { CautionTape } from '../CautionTape';
@@ -137,15 +137,18 @@ export class Sandbox {
         tape.down();
       },
       onClick: () => {
-        toast('Hello World, You Click On the Board');
-        dialog.open({
-          title: 'Dialog Title',
-          content: 'Dialog Conent',
-          onOk: async () => {
-            return new Promise((r) => {
-              setTimeout(r, 1000);
-            }).catch((e) => console.log('Oops errors!', e));
-          },
+        alert.open({
+          title: 'Hello',
+          size: 'sm',
+          description: [
+            'Description, this is alot of description, do you know ',
+            React.createElement('a', {
+              key: 'link',
+              children: 'Link is here',
+              style: { cursor: 'pointer' },
+            }),
+            ' Description second',
+          ],
         });
       },
     });

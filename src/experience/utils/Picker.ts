@@ -28,11 +28,9 @@ export class Picker {
       if (this._intersects.length) {
         const target = this._resolveRegisteredTarget(this._intersects[0].object);
 
-        if (target) {
-          if (target !== this._lastInteractive) {
-            this._handles.get(target)?.onEnter?.();
-            this._lastInteractive = target;
-          }
+        if (target && target !== this._lastInteractive) {
+          this._lastInteractive = target;
+          this._handles.get(this._lastInteractive)?.onEnter?.();
         }
 
         if (!target && this._lastInteractive) {

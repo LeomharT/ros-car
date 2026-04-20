@@ -16,6 +16,8 @@ export type DialogParams = {
   content?: React.ReactNode;
   footer?: boolean;
   showCloseButton?: boolean;
+  okText?: string;
+  cancelText?: string;
   onOk?: () => Promise<unknown> | void;
 };
 
@@ -31,13 +33,16 @@ export type DialogProps = {
 export function Dialog({ ref }: DialogProps) {
   const [open, setOpen] = useState(false);
 
-  const [props, setProps] = useState<DialogParams>();
+  const [props, setProps] = useState<DialogParams>({
+    okText: 'Ok',
+    cancelText: 'Cancel',
+  });
 
   const [loading, setLoading] = useState(false);
 
   function openDialog(props?: DialogParams) {
     setOpen(true);
-    setProps(props);
+    setProps((prev) => ({ ...prev, ...props }));
   }
 
   function handleOnOk() {
@@ -68,11 +73,11 @@ export function Dialog({ ref }: DialogProps) {
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{props?.cancelText}</Button>
           </DialogClose>
           <Button type="submit" disabled={loading} onClick={handleOnOk}>
             {loading && <Spinner />}
-            Save changes
+            {props?.okText}
           </Button>
         </DialogFooter>
       </DialogContent>
