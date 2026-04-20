@@ -4,7 +4,6 @@ import type { Experience } from '../Experience';
 type RaycasterHandlers = {
   onEnter?: () => void;
   onLeave?: () => void;
-  onHover?: () => void;
   onClick?: () => void;
 };
 
@@ -33,9 +32,6 @@ export class Picker {
           if (target !== this._lastInteractive) {
             this._handles.get(target)?.onEnter?.();
             this._lastInteractive = target;
-          }
-          if (target === this._lastInteractive) {
-            this._handles.get(target)?.onHover?.();
           }
         }
 
