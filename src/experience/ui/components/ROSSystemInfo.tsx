@@ -1,4 +1,13 @@
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from '@/components/ui/chart';
 import {
   Table,
   TableBody,
@@ -8,10 +17,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IconChevronDown } from '@tabler/icons-react';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
 
 const invoices = [
   { name: 'ROS Robot Base (Standard)', qty: 1, price: '$750.00' },
@@ -25,6 +35,29 @@ const invoices = [
   { name: 'Vinyl Simulation Map', qty: 1, price: '$55.00' },
   { name: 'License Plate Set', qty: 1, price: '$14.99' },
 ];
+
+const chartData = [
+  { month: 'January', desktop: 186, mobile: 80 },
+  { month: 'February', desktop: 305, mobile: 200 },
+  { month: 'March', desktop: 237, mobile: 120 },
+  { month: 'April', desktop: 73, mobile: 190 },
+  { month: 'May', desktop: 209, mobile: 130 },
+  { month: 'June', desktop: 214, mobile: 140 },
+];
+
+const chartConfig = {
+  desktop: {
+    label: 'Desktop',
+    color: 'var(--chart-1)',
+  },
+  mobile: {
+    label: 'Mobile',
+    color: 'var(--chart-2)',
+  },
+} satisfies ChartConfig;
+
+const CHART_COLOR1 = 'lab(77.5052% -6.4629 -36.42)';
+const CHART_COLOR2 = 'lab(54.1736% 13.3369 -74.6839)';
 
 export default function ROSSystemInfo() {
   const ref = useRef<HTMLDivElement>(null);
@@ -56,12 +89,12 @@ export default function ROSSystemInfo() {
           <strong>Specifications:</strong>
         </p>
         <ul>
-          <li>Processor : 3.6GHz Octa-Core</li>
-          <li>Memory : 16GB RAM</li>
-          <li>Storage : 1TB SSD</li>
-          <li>Display : 15.6” 4K UHD</li>
+          <li>Processor: 3.6GHz Octa-Core</li>
+          <li>Memory: 16GB RAM</li>
+          <li>Storage: 1TB SSD</li>
+          <li>Display: 15.6” 4K UHD</li>
           <li>Battery Life: 12 hours</li>
-          <li>Weight : 2.1kg</li>
+          <li>Weight: 2.1kg</li>
         </ul>
       </div>
       <div className="space-y-1">
@@ -140,10 +173,96 @@ export default function ROSSystemInfo() {
         <Tabs defaultValue="velocity">
           <TabsList className="w-full">
             <TabsTrigger value="velocity">Velocity</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="battery">Battery</TabsTrigger>
           </TabsList>
+          <TabsContent value="velocity">
+            <Card>
+              <CardContent>
+                <ChartContainer config={chartConfig}>
+                  <AreaChart
+                    accessibilityLayer
+                    data={chartData}
+                    margin={{
+                      left: 12,
+                      right: 12,
+                    }}
+                  >
+                    <CartesianGrid vertical={false} strokeDasharray="3" />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <CustomLinearGradient />
+                    <Area
+                      dataKey="mobile"
+                      type="natural"
+                      fill="url(#fillMobile)"
+                      fillOpacity={0.4}
+                      stroke={CHART_COLOR2}
+                      stackId="a"
+                    />
+                    <Area
+                      dataKey="desktop"
+                      type="natural"
+                      fill="url(#fillDesktop)"
+                      fillOpacity={0.4}
+                      stroke={CHART_COLOR1}
+                      stackId="a"
+                    />
+                  </AreaChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="battery">
+            <Card>
+              <CardContent>
+                <ChartContainer config={chartConfig}>
+                  <BarChart accessibilityLayer data={chartData}>
+                    <CartesianGrid vertical={false} strokeDasharray="3" />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+                    <XAxis
+                      dataKey="month"
+                      tickLine={false}
+                      axisLine={false}
+                      tickMargin={8}
+                      tickFormatter={(value) => value.slice(0, 3)}
+                    />
+                    <Bar
+                      dataKey="desktop"
+                      type="natural"
+                      fill={CHART_COLOR2}
+                      stroke={CHART_COLOR2}
+                      fillOpacity={1}
+                      stackId="a"
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
+  );
+}
+
+function CustomLinearGradient() {
+  return (
+    <defs>
+      <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="5%" stopColor={CHART_COLOR1} stopOpacity={0.8} />
+        <stop offset="95%" stopColor={CHART_COLOR1} stopOpacity={0.1} />
+      </linearGradient>
+      <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="5%" stopColor={CHART_COLOR2} stopOpacity={0.8} />
+        <stop offset="95%" stopColor={CHART_COLOR2} stopOpacity={0.1} />
+      </linearGradient>
+    </defs>
   );
 }
