@@ -5,9 +5,11 @@ import { alert, dialog } from '@/experience/ui/UIShell';
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
 import React, { createRef } from 'react';
-import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
+import { Box3, BufferGeometry, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
 import { CautionTape } from '../CautionTape';
+
+type LightMesh = Mesh<BufferGeometry, MeshStandardMaterial>;
 
 export class Sandbox {
   constructor(exp: Experience) {
@@ -174,7 +176,36 @@ export class Sandbox {
   }
 
   private _initTrafficLight() {
+    const current = 'red';
+
     const mesh = this.mesh.getObjectByName('信号灯') as Mesh;
+
+    const redLight = this.mesh.getObjectByName('红灯') as LightMesh;
+    const yellowLight = this.mesh.getObjectByName('黄灯') as LightMesh;
+    const greenLight = this.mesh.getObjectByName('绿灯') as LightMesh;
+
+    const lights = {
+      red: {
+        mesh: redLight,
+        material: redLight.material,
+        darkMaterial: new MeshStandardMaterial({ color: redLight.material.color }),
+      },
+      yellow: {
+        mesh: yellowLight,
+        material: yellowLight.material,
+        darkMaterial: new MeshStandardMaterial({ color: yellowLight.material.color }),
+      },
+      green: {
+        mesh: greenLight,
+        material: greenLight.material,
+        darkMaterial: new MeshStandardMaterial({ color: greenLight.material.color }),
+      },
+    };
+
+    for (const key in lights) {
+      const light = lights[key as keyof typeof lights];
+      if (key !== current) light.mesh.material = light.darkMaterial;
+    }
 
     const ref = createRef() as TrafficLightConfigRef;
 
@@ -189,16 +220,26 @@ export class Sandbox {
         dialog.open({
           title: 'Traffic Light Config',
           description: 'Configure the color settings for the traffic signal.',
-          content: React.createElement(TrafficLightConfig, { ref }),
+          content: React.createElement(TrafficLightConfig, {
+            ref,
+            current: this.trafficLight.current,
+          }),
           okText: 'Submit',
-          onOk() {
-            ref.current?.submit((value) => console.log(value));
+          onOk: () => {
+            ref.current?.submit((value) => {
+              this.trafficLight.current = value;
+              for (const key in lights) {
+                const light = lights[key as keyof typeof lights];
+                light.mesh.material = key === value ? light.material : light.darkMaterial;
+              }
+              dialog.close();
+            });
           },
         });
       },
     });
 
-    return { mesh };
+    return { mesh, current };
   }
 
   private _toggleBarrier() {

@@ -35,10 +35,11 @@ export type TrafficLightConfigRef = React.RefObject<{
 
 export type TrafficLightConfigProps = {
   ref: TrafficLightConfigRef;
+  current: string;
 };
 
-export default function TrafficLightConfig({ ref }: TrafficLightConfigProps) {
-  const [value, setValue] = useState('red');
+export default function TrafficLightConfig({ ref, current }: TrafficLightConfigProps) {
+  const [value, setValue] = useState(current);
 
   useImperativeHandle(ref, () => ({
     submit: (fn: (value: string) => void) => {
