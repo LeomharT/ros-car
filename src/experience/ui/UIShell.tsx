@@ -2,7 +2,7 @@ import React, { createRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 import { Alert, type AlertParams, type AlertRef } from './components/Alert';
-import { Dialog, type DialogParams, type DialogRef } from './components/Dialog';
+import { Dialog, type DialogConfig, type DialogRef } from './components/Dialog';
 
 export class UIShell {
   private constructor() {
@@ -55,7 +55,7 @@ export class UIShell {
 }
 
 export const dialog = {
-  open: (args: DialogParams) => UIShell.getInstance().dialog.current?.open(args),
+  open: (args: DialogConfig) => UIShell.getInstance().dialog.current?.open(args),
   close: () => UIShell.getInstance().dialog.current?.close(),
 };
 

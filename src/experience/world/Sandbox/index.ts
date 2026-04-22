@@ -1,7 +1,10 @@
-import { alert } from '@/experience/ui/UIShell';
+import TrafficLightConfig, {
+  type TrafficLightConfigRef,
+} from '@/experience/ui/components/TrafficLightConfig';
+import { alert, dialog } from '@/experience/ui/UIShell';
 import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier3d';
 import gsap from 'gsap';
-import React from 'react';
+import React, { createRef } from 'react';
 import { Box3, Mesh, MeshStandardMaterial, Vector3, type Group } from 'three';
 import type { Experience } from '../../Experience';
 import { CautionTape } from '../CautionTape';
@@ -15,6 +18,7 @@ export class Sandbox {
     this.walls = this._initWall();
     this.barrier = this._initBarrier();
     this.parkingGround = this._initParkingGround();
+    this.trafficLight = this._initTrafficLight();
     this.pane = this._setupPane();
 
     this._exp.scene.add(this.mesh);
@@ -31,6 +35,8 @@ export class Sandbox {
   public barrier: ReturnType<typeof this._initBarrier>;
 
   public parkingGround: ReturnType<typeof this._initParkingGround>;
+
+  public trafficLight: ReturnType<typeof this._initTrafficLight>;
 
   public pane: ReturnType<typeof this._setupPane>;
 
@@ -165,6 +171,34 @@ export class Sandbox {
     this._exp.scene.add(tape.mesh);
 
     return { tape };
+  }
+
+  private _initTrafficLight() {
+    const mesh = this.mesh.getObjectByName('信号灯') as Mesh;
+
+    const ref = createRef() as TrafficLightConfigRef;
+
+    this._exp.picker.register(mesh, {
+      onEnter: () => {
+        this._exp.canvas.style.cursor = 'pointer';
+      },
+      onLeave: () => {
+        this._exp.canvas.style.cursor = 'default';
+      },
+      onClick: () => {
+        dialog.open({
+          title: 'Traffic Light Config',
+          description: 'Configure the color settings for the traffic signal.',
+          content: React.createElement(TrafficLightConfig, { ref }),
+          okText: 'Submit',
+          onOk() {
+            ref.current?.submit((value) => console.log(value));
+          },
+        });
+      },
+    });
+
+    return { mesh };
   }
 
   private _toggleBarrier() {

@@ -55,6 +55,7 @@ export class Car {
       },
       onClick: () => {
         dialog.open({
+          size: 'md',
           title: 'Product System Information',
           content: React.createElement(ROSSystemInfo),
           okButtonProps: {

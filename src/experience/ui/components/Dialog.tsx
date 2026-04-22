@@ -9,9 +9,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
+import clsx from 'clsx';
 import React, { useImperativeHandle, useState } from 'react';
 
-export type DialogParams = {
+export type DialogConfig = {
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   title?: string;
   description?: React.ReactNode;
   content?: React.ReactNode;
@@ -25,7 +27,7 @@ export type DialogParams = {
 };
 
 export type DialogRef = React.RefObject<{
-  open: (params?: DialogParams) => void;
+  open: (params?: DialogConfig) => void;
   close: () => void;
 }>;
 
@@ -36,16 +38,17 @@ export type DialogProps = {
 export function Dialog({ ref }: DialogProps) {
   const [open, setOpen] = useState(false);
 
-  const [props, setProps] = useState<DialogParams>({
+  const [props, setProps] = useState<DialogConfig>({
+    size: 'sm',
     okText: 'Ok',
     cancelText: 'Cancel',
   });
 
   const [loading, setLoading] = useState(false);
 
-  function openDialog(props?: DialogParams) {
+  function handleOnOpen(props?: DialogConfig) {
     setOpen(true);
-    setProps((prev) => ({ ...prev, ...props }));
+    setProps((prev) => ({ ...prev, ...props, size: props?.size ?? 'sm' }));
   }
 
   function handleOnOk() {
@@ -62,14 +65,17 @@ export function Dialog({ ref }: DialogProps) {
 
   useImperativeHandle(ref, () => {
     return {
-      open: (params?: DialogParams) => openDialog(params),
+      open: handleOnOpen,
       close: () => setOpen(false),
     };
   }, []);
 
   return (
     <DialogShadcn open={open} onOpenChange={(open) => !open && setOpen(false)}>
-      <DialogContent showCloseButton={props?.showCloseButton}>
+      <DialogContent
+        showCloseButton={props?.showCloseButton}
+        className={clsx(`${props.size}:max-w-${props.size}`)}
+      >
         <DialogHeader>
           <DialogTitle>{props?.title}</DialogTitle>
           <DialogDescription>{props?.description}</DialogDescription>
