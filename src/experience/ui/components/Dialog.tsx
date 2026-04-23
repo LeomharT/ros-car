@@ -9,7 +9,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
-import clsx from 'clsx';
 import React, { useImperativeHandle, useState } from 'react';
 
 export type DialogConfig = {
@@ -35,6 +34,13 @@ export type DialogProps = {
   ref: DialogRef;
 };
 
+const sizeMap = {
+  sm: 'sm:max-w-sm',
+  md: 'md:max-w-md',
+  lg: 'lg:max-w-lg',
+  xl: 'xl:max-w-xl',
+};
+
 export function Dialog({ ref }: DialogProps) {
   const [open, setOpen] = useState(false);
 
@@ -48,7 +54,7 @@ export function Dialog({ ref }: DialogProps) {
 
   function handleOnOpen(props?: DialogConfig) {
     setOpen(true);
-    setProps((prev) => ({ ...prev, ...props, size: props?.size ?? 'sm' }));
+    setProps(() => ({ size: 'sm', okText: 'Ok', cancelText: 'Cancel', ...props }));
   }
 
   function handleOnOk() {
@@ -74,7 +80,7 @@ export function Dialog({ ref }: DialogProps) {
     <DialogShadcn open={open} onOpenChange={(open) => !open && setOpen(false)}>
       <DialogContent
         showCloseButton={props?.showCloseButton}
-        className={clsx(`${props.size}:max-w-${props.size}`)}
+        className={sizeMap[props.size || 'sm']}
       >
         <DialogHeader>
           <DialogTitle>{props?.title}</DialogTitle>
