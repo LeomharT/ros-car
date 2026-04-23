@@ -1,4 +1,4 @@
-import { Object3D, Raycaster, Vector2, type Intersection } from 'three';
+import { Object3D, Raycaster, Vector2, Vector3, type Intersection } from 'three';
 import type { Experience } from '../Experience';
 
 type RaycasterHandlers = {
@@ -84,6 +84,11 @@ export class Picker {
 
   public pick(target: Object3D[]) {
     this._raycaster.setFromCamera(this._cursro, this._exp.camera.instance);
+    return this._raycaster.intersectObjects(target, true);
+  }
+
+  public cast(target: Object3D[], origin: Vector3, direction: Vector3) {
+    this._raycaster.set(origin, direction);
     return this._raycaster.intersectObjects(target, true);
   }
 

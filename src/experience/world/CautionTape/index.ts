@@ -29,6 +29,8 @@ export class CautionTape {
 
   public animation?: TapeAnimation;
 
+  public status: boolean = false;
+
   private _uniforms: ReturnType<typeof this._setupUniforms>;
 
   private _setupUniforms() {
@@ -87,10 +89,12 @@ export class CautionTape {
 
   public up() {
     this.animation?.up?.();
+    this.status = true;
   }
 
   public down() {
     this.animation?.down?.();
+    this.status = false;
   }
 
   public update() {

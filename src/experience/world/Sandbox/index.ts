@@ -135,13 +135,16 @@ export class Sandbox {
 
   private _initParkingGround() {
     const mesh = this.mesh.getObjectByName('p地面') as Mesh;
+
     this._exp.picker.register(mesh, {
       onEnter: () => {
         this._exp.canvas.style.cursor = 'pointer';
+        this.parkingGround.cursor = true;
         tape.up();
       },
       onLeave: () => {
         this._exp.canvas.style.cursor = 'default';
+        this.parkingGround.cursor = false;
         tape.down();
       },
       onClick: () => {
@@ -172,7 +175,7 @@ export class Sandbox {
 
     this._exp.scene.add(tape.mesh);
 
-    return { tape };
+    return { tape, mesh, cursor: false };
   }
 
   private _initTrafficLight() {
@@ -264,5 +267,22 @@ export class Sandbox {
 
   public update() {
     this.parkingGround.tape.update();
+
+    if (this.parkingGround.cursor) return;
+
+    const i = this._exp.picker.cast(
+      [this._exp.world.car.car.mesh],
+      this.parkingGround.mesh.position,
+      new Vector3(0, 1, 0),
+    );
+
+    const isPassing = !!i.length;
+
+    if (isPassing) this.parkingGround.cursor = false;
+
+    if (isPassing !== this.parkingGround.tape.status) {
+      isPassing ? this.parkingGround.tape.up() : this.parkingGround.tape.down();
+      this.parkingGround.tape.status = isPassing;
+    }
   }
 }
