@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 import { Alert, type AlertParams, type AlertRef } from './components/Alert';
 import { Dialog, type DialogConfig, type DialogRef } from './components/Dialog';
+import type { MarkersRef } from './components/Markers';
+import Markers from './components/Markers';
 
 export class UIShell {
   private constructor() {
@@ -33,6 +35,7 @@ export class UIShell {
 
     const dialogRef = createRef() as DialogRef;
     const alertRef = createRef() as AlertRef;
+    const markersRef = createRef() as MarkersRef;
 
     const root = createRoot(el);
     root.render(
@@ -40,6 +43,7 @@ export class UIShell {
         <Toaster position="top-center" />
         <Dialog ref={dialogRef} />
         <Alert ref={alertRef} />
+        <Markers ref={markersRef} />
       </React.StrictMode>,
     );
 
