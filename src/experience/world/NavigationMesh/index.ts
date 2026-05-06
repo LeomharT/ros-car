@@ -4,7 +4,6 @@ import { alert } from '@/experience/ui/UIShell';
 export class NavigationMesh {
   constructor(exp: Experience) {
     this._exp = exp;
-
     this.mesh = this._initMesh();
   }
 
@@ -22,10 +21,10 @@ export class NavigationMesh {
       onEnter: () => {
         this._exp.canvas.style.cursor = 'default';
       },
-      onClick(e) {
+      onClick: (_, p) => {
         alert.open({
           title: 'Click on the navigation mesh',
-          description: `X ${e.clientX} Y ${e.clientY}`,
+          description: `X ${p.x} Y ${p.y} Z ${p.z}`,
         });
       },
     });
