@@ -4,7 +4,7 @@ import type { Experience } from '../Experience';
 type RaycasterHandlers = {
   onEnter?: () => void;
   onLeave?: () => void;
-  onClick?: () => void;
+  onClick?: (e: PointerEvent) => void;
 };
 
 export class Picker {
@@ -51,7 +51,7 @@ export class Picker {
 
       if (this._intersects.length) {
         const target = this._resolveRegisteredTarget(this._intersects[0].object);
-        target && this._handles.get(target)?.onClick?.();
+        target && this._handles.get(target)?.onClick?.(e);
       }
     });
 

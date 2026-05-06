@@ -1,4 +1,5 @@
 import type { Experience } from '@/experience/Experience';
+import { alert } from '@/experience/ui/UIShell';
 
 export class NavigationMesh {
   constructor(exp: Experience) {
@@ -15,8 +16,19 @@ export class NavigationMesh {
     const model = this._exp.resources.items.navigation;
 
     const mesh = model.scene;
+    mesh.visible = false;
 
-    mesh.position.y = 5;
+    this._exp.picker.register(mesh, {
+      onEnter: () => {
+        this._exp.canvas.style.cursor = 'default';
+      },
+      onClick(e) {
+        alert.open({
+          title: 'Click on the navigation mesh',
+          description: `X ${e.clientX} Y ${e.clientY}`,
+        });
+      },
+    });
 
     this._exp.scene.add(mesh);
 
