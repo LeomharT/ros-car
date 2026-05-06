@@ -12,6 +12,7 @@ export type ResourcesItems = {
   carModel: GLTF;
   mapModel: GLTF;
   environment: Texture;
+  navigation: GLTF;
 };
 
 export default class Resources extends EventDispatcher<{
