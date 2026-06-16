@@ -22,7 +22,7 @@ export class NavigationMesh {
         this._exp.canvas.style.cursor = 'default';
       },
       onClick: (_, p) => {
-        toast(`X ${p.x} Y ${p.y} Z ${p.z}`);
+        toast(`X:${p.x.toFixed(3)}, Y:${p.y.toFixed(3)}, Z:${p.z.toFixed(3)}`);
       },
     });
 
