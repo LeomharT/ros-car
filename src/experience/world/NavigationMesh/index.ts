@@ -1,5 +1,5 @@
 import type { Experience } from '@/experience/Experience';
-import { alert } from '@/experience/ui/UIShell';
+import { toast } from 'sonner';
 
 export class NavigationMesh {
   constructor(exp: Experience) {
@@ -22,10 +22,7 @@ export class NavigationMesh {
         this._exp.canvas.style.cursor = 'default';
       },
       onClick: (_, p) => {
-        alert.open({
-          title: 'Click on the navigation mesh',
-          description: `X ${p.x} Y ${p.y} Z ${p.z}`,
-        });
+        toast(`X ${p.x} Y ${p.y} Z ${p.z}`);
       },
     });
 
