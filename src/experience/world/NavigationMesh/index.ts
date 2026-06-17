@@ -21,6 +21,7 @@ export class NavigationMesh {
     group.material.polygonOffset = true;
     group.material.polygonOffsetFactor = -4.0;
     group.material.needsUpdate = true;
+    group.material.fog = false;
 
     this._exp.scene.add(group);
     this._exp.scene.add(createGraphHelper(model.graph, 0.2));
@@ -39,7 +40,7 @@ export class NavigationMesh {
 
     // this._exp.scene.add(mesh);
 
-    // return mesh;
+    return model;
   }
 }
 
