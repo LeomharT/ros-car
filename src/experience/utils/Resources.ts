@@ -1,18 +1,20 @@
 import { EventDispatcher, Texture, TextureLoader } from 'three';
 import { DRACOLoader, GLTFLoader, HDRLoader, type GLTF } from 'three/examples/jsm/Addons.js';
+import * as YUKA from 'yuka';
 import { sources } from '../data/sources';
 
 export type ResourcesLoaders = {
   gltfLoader: GLTFLoader;
   hdrLoader: HDRLoader;
   textureLoader: TextureLoader;
+  navMeshLoader: YUKA.NavMeshLoader;
 };
 
 export type ResourcesItems = {
   carModel: GLTF;
   mapModel: GLTF;
   environment: Texture;
-  navigation: GLTF;
+  navigation: YUKA.NavMesh;
 };
 
 export default class Resources extends EventDispatcher<{
@@ -43,11 +45,13 @@ export default class Resources extends EventDispatcher<{
 
     const hdrLoader = new HDRLoader();
     const textureLoader = new TextureLoader();
+    const navMeshLoader = new YUKA.NavMeshLoader();
 
     return {
       gltfLoader,
       hdrLoader,
       textureLoader,
+      navMeshLoader,
     };
   }
 
@@ -62,6 +66,12 @@ export default class Resources extends EventDispatcher<{
         }
         case 'gltfModel': {
           this.loaders.gltfLoader.load(source.path, (data) => {
+            this._sourceLoaded(source, data);
+          });
+          break;
+        }
+        case 'navMesh': {
+          this.loaders.navMeshLoader.load(source.path).then((data) => {
             this._sourceLoaded(source, data);
           });
           break;
