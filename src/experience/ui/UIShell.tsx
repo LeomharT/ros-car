@@ -13,6 +13,7 @@ export class UIShell {
     this.el = root.el;
     this.dialog = root.dialogRef;
     this.alert = root.alertRef;
+    this.market = root.markersRef;
   }
 
   public el: HTMLDivElement;
@@ -20,6 +21,8 @@ export class UIShell {
   public dialog: DialogRef;
 
   public alert: AlertRef;
+
+  public market: MarkersRef;
 
   private _initRoot() {
     /**
@@ -47,7 +50,7 @@ export class UIShell {
       </React.StrictMode>,
     );
 
-    return { el, dialogRef, alertRef };
+    return { el, dialogRef, alertRef, markersRef };
   }
 
   private static _instance: UIShell;

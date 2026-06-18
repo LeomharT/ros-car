@@ -35,7 +35,7 @@ export default class Camera {
     controls1.dampingFactor = 0.08;
     controls1.rotateSpeed = 0.65;
     controls1.enableRotate = true;
-    controls1.enablePan = true;
+    controls1.enablePan = false;
     controls1.enableZoom = false;
 
     const controls2 = new TrackballControls(this.instance, this._exp.canvas);
@@ -76,7 +76,20 @@ export default class Camera {
     this.control1.maxPolarAngle = maxPolarAngle;
     this.control1.minPolarAngle = minPolarAngle;
 
+    // Update controls
     this.control2.update();
     this.control1.update(time);
+
+    // Update ui marker
+    if (this._exp.uiShell.market.current) {
+      const p = this._exp.uiShell.market.current?.positions.clone().project(this.instance);
+      p.x = (p.x + 1) / 2;
+      p.y = -(p.y - 1) / 2;
+
+      this._exp.uiShell.market.current?.updateTranslate(
+        p.x * this._exp.sizes.width,
+        p.y * this._exp.sizes.height,
+      );
+    }
   }
 }
