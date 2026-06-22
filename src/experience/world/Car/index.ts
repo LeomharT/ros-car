@@ -30,6 +30,10 @@ export class Car {
 
   public car: ReturnType<typeof this._initModel>;
 
+  private static FORWARD_SPEED: number = 20;
+
+  private static BACKWARD_SPEED: number = -18;
+
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '🚗 Car' });
     return pane;
@@ -269,10 +273,10 @@ export class Car {
     const backward = this._exp.keyboardCtrl.keyMap.KeyS;
 
     if (forward) {
-      this._velocity = 20;
+      this._velocity = Car.FORWARD_SPEED;
       factor = 2.0;
     } else if (backward) {
-      this._velocity = -18;
+      this._velocity = Car.BACKWARD_SPEED;
       factor = 2.0;
     } else {
       this._velocity = 0.0;
