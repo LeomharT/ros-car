@@ -1,5 +1,5 @@
 import { IconMapPinFilled } from '@tabler/icons-react';
-import { useImperativeHandle, useRef } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import { Vector3 } from 'three';
 
 export type MarkersRef = React.RefObject<{
@@ -47,18 +47,18 @@ export class _Marker {
 
   private _initDOM() {
     const div = document.createElement('div');
-    div.classList.add(
-      'w-16',
-      'h-16',
-      'absolute',
-      '-top-8',
-      '-left-8',
-      'flex',
-      'justify-center',
-      'transform-3d',
-      'items-center',
-      'bg-red-500',
-    );
+    div.style.width = '48px';
+    div.style.height = '48px';
+    div.style.position = 'absolute';
+    div.style.top = '-24px';
+    div.style.left = '-24px';
+    div.style.background = 'rgb(0, 0, 0, 0)';
+
+    const img = new Image(64, 64);
+    img.src = '/assets/img/map-pin-fill.svg';
+    img.draggable = false;
+
+    div.append(img);
 
     return div;
   }

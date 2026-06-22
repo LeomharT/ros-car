@@ -1,3 +1,4 @@
+import { TooltipProvider } from '@/components/ui/tooltip';
 import React, { createRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
@@ -42,9 +43,11 @@ export class UIShell {
     const root = createRoot(el);
     root.render(
       <React.StrictMode>
-        <Toaster position="top-center" />
-        <Dialog ref={dialogRef} />
-        <Alert ref={alertRef} />
+        <TooltipProvider>
+          <Toaster position="top-center" />
+          <Dialog ref={dialogRef} />
+          <Alert ref={alertRef} />
+        </TooltipProvider>
       </React.StrictMode>,
     );
 

@@ -20,13 +20,19 @@ export class Picker {
     this._exp.canvas.addEventListener('pointermove', (e) => {
       if (!this._enabled) return;
 
-      this._cursro.x = (e.clientX / window.innerWidth) * 2 - 1;
-      this._cursro.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      this._cursro.x = (e.clientX / exp.sizes.width) * 2 - 1;
+      this._cursro.y = -(e.clientY / exp.sizes.height) * 2 + 1;
 
       this._intersects = this.pick(Array.from(this._handles.keys()));
 
       if (this._intersects.length) {
         const target = this._resolveRegisteredTarget(this._intersects[0].object);
+
+        if (this._lastInteractive && target) {
+          if (target.uuid !== this._lastInteractive.uuid) {
+            this._handles.get(this._lastInteractive)?.onLeave?.();
+          }
+        }
 
         if (target && target !== this._lastInteractive) {
           this._lastInteractive = target;

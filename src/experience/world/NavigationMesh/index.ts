@@ -19,12 +19,24 @@ export class NavigationMesh {
     const group = createConvexRegionHelper(model);
     group.frustumCulled = false;
     group.material.polygonOffset = true;
-    group.material.polygonOffsetFactor = -4.0;
+    group.material.polygonOffsetFactor = -2.0;
     group.material.needsUpdate = true;
     group.material.fog = false;
 
+    const helper = createGraphHelper(model.graph, 0.2);
+
+    this._exp.picker.register(group, {
+      onClick: (_, point) => {
+        this._exp.uiShell.marker.position.copy(point);
+      },
+      onEnter: () => {
+        this._exp.canvas.style.cursor = 'default';
+      },
+      onLeave: () => {},
+    });
+
     this._exp.scene.add(group);
-    this._exp.scene.add(createGraphHelper(model.graph, 0.2));
+    this._exp.scene.add(helper);
 
     // const mesh = model.scene;
     // mesh.visible = false;
