@@ -35,3 +35,35 @@ export default function Markers({ ref }: MarkersProps) {
     </div>
   );
 }
+
+export class _Marker {
+  constructor() {
+    this.dom = this._initDOM();
+    document.body.append(this.dom);
+  }
+  public dom: HTMLDivElement;
+
+  public position = new Vector3(3, 3, 3);
+
+  private _initDOM() {
+    const div = document.createElement('div');
+    div.classList.add(
+      'w-16',
+      'h-16',
+      'absolute',
+      '-top-8',
+      '-left-8',
+      'flex',
+      'justify-center',
+      'transform-3d',
+      'items-center',
+      'bg-red-500',
+    );
+
+    return div;
+  }
+
+  public updatePosition(x: number, y: number) {
+    this.dom.style.transform = `translate(${x}px, ${y}px)`;
+  }
+}
