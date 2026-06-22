@@ -97,7 +97,7 @@ export class CautionTape {
     this.status = false;
   }
 
-  public update() {
-    this._uniforms.uTime.value += 0.016;
+  public update(dt: number) {
+    this._uniforms.uTime.value += dt;
   }
 }

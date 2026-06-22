@@ -14,6 +14,7 @@ export class Debug {
   private _setupInstance() {
     const pane = new Pane({ title: 'Debug Pane' });
     pane.element.parentElement!.style.width = '380px';
+    pane.element.parentElement!.style.userSelect = 'none';
     pane.registerPlugin(EssentialsPlugin);
 
     return pane;

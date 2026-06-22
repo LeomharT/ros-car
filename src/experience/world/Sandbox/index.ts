@@ -266,7 +266,7 @@ export class Sandbox {
   }
 
   public update() {
-    this.parkingGround.tape.update();
+    this.parkingGround.tape.update(this._exp.time.delta);
 
     if (this.parkingGround.cursor) return;
 
