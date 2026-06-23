@@ -8,6 +8,8 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '@/components/ui/chart';
+import { Field, FieldContent, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -59,7 +61,12 @@ const chartConfig = {
 const CHART_COLOR1 = 'lab(77.5052% -6.4629 -36.42)';
 const CHART_COLOR2 = 'lab(54.1736% 13.3369 -74.6839)';
 
-export default function ROSSystemInfo() {
+type ROSSystemInfoProps = {
+  autoNav?: boolean;
+  onChange?: (val: boolean) => void;
+};
+
+export default function ROSSystemInfo(props: ROSSystemInfoProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   const [open, setOpen] = useState(false);
@@ -83,6 +90,25 @@ export default function ROSSystemInfo() {
           An open-source robotics software framework designed to simplify development through
           modular design and a distributed architecture.
         </p>
+      </div>
+      <div className="space-y-1">
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldLabel htmlFor="auto-nav" className="text-foreground">
+              Navigation
+            </FieldLabel>
+            <FieldDescription>
+              When enabled, clicking a point on the map will make the vehicle navigate there
+              automatically. When disabled, keyboard control is used.
+            </FieldDescription>
+          </FieldContent>
+          <Switch
+            id="auto-nav"
+            autoFocus={false}
+            defaultChecked={props.autoNav}
+            onCheckedChange={props.onChange}
+          />
+        </Field>
       </div>
       <div className="space-y-1">
         <p>

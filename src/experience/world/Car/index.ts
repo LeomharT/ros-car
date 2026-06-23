@@ -18,6 +18,18 @@ export class Car {
     this._pane = this._setupPane();
 
     this.car = this._initModel();
+
+    dialog.open({
+      size: 'md',
+      title: 'Product System Information',
+      content: React.createElement(ROSSystemInfo, {
+        autoNav: this.autoNav,
+        onChange: (val) => (this.autoNav = val),
+      }),
+      okButtonProps: {
+        hidden: true,
+      },
+    });
   }
 
   private _exp: Experience;
@@ -29,6 +41,8 @@ export class Car {
   public _velocity: number = 0;
 
   public car: ReturnType<typeof this._initModel>;
+
+  public autoNav: boolean = false;
 
   private static FORWARD_SPEED: number = 20;
 
@@ -61,7 +75,10 @@ export class Car {
         dialog.open({
           size: 'md',
           title: 'Product System Information',
-          content: React.createElement(ROSSystemInfo),
+          content: React.createElement(ROSSystemInfo, {
+            autoNav: this.autoNav,
+            onChange: (val) => (this.autoNav = val),
+          }),
           okButtonProps: {
             hidden: true,
           },
