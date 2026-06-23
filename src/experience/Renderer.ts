@@ -88,5 +88,6 @@ export default class Renderer {
 
   public resize() {
     this.instance.setSize(this._exp.sizes.width, this._exp.sizes.height);
+    this.cssRender.setSize(this._exp.sizes.width, this._exp.sizes.height);
   }
 }

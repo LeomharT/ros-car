@@ -27,8 +27,7 @@ export class NavigationMesh {
 
     this._exp.picker.register(group, {
       onClick: (_, point) => {
-        const p = point.clone();
-        p.y = 1.0;
+        const p = point.clone().setY(1.5);
         this._exp.world.mapPin.target.position.copy(p);
       },
       onEnter: () => {
