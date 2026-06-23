@@ -38,6 +38,7 @@ export class MapPin {
     createRoot(root).render(React.createElement(Marker, { ref }));
 
     const obj = new CSS3DObject(root);
+    obj.visible = false;
     obj.position.set(0, 3, 0);
     obj.scale.setScalar(1.2);
     obj.userData.ref = ref;

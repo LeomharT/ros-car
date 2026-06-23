@@ -6,10 +6,13 @@ import * as YUKA from 'yuka';
 export class NavigationMesh {
   constructor(exp: Experience) {
     this._exp = exp;
+    this._pane = this._setupPane();
     this.mesh = this._initMesh();
   }
 
   private _exp: Experience;
+
+  private _pane: ReturnType<typeof this._setupPane>;
 
   public mesh: ReturnType<typeof this._initMesh>;
 
@@ -22,8 +25,13 @@ export class NavigationMesh {
     group.material.polygonOffsetFactor = -2.0;
     group.material.needsUpdate = true;
     group.material.fog = false;
+    // group.visible = false;
 
     const helper = createGraphHelper(model.graph, 0.2);
+    // helper.visible = false;
+
+    this._pane.addBinding(group, 'visible', { label: 'Region Helper' });
+    this._pane.addBinding(helper, 'visible', { label: 'Graph Helper' });
 
     this._exp.picker.register(group, {
       onClick: (_, point) => {
@@ -43,6 +51,11 @@ export class NavigationMesh {
     this._exp.scene.add(helper);
 
     return model;
+  }
+
+  private _setupPane() {
+    const pane = this._exp.debug.pane.addFolder({ title: '🧭 NavigationMesh' });
+    return pane;
   }
 }
 
