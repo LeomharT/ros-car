@@ -45,6 +45,11 @@ export class MapPin {
     return obj;
   }
 
+  public hidden() {
+    this.target.visible = false;
+    this.target.position.set(0, 0, 0);
+  }
+
   public update() {
     const dt = this._exp.time.delta;
     const t = 1.0 - Math.exp(lambda * -dt);

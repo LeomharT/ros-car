@@ -18,18 +18,6 @@ export class Car {
     this._pane = this._setupPane();
 
     this.car = this._initModel();
-
-    dialog.open({
-      size: 'md',
-      title: 'Product System Information',
-      content: React.createElement(ROSSystemInfo, {
-        autoNav: this.autoNav,
-        onChange: (val) => (this.autoNav = val),
-      }),
-      okButtonProps: {
-        hidden: true,
-      },
-    });
   }
 
   private _exp: Experience;
@@ -77,7 +65,10 @@ export class Car {
           title: 'Product System Information',
           content: React.createElement(ROSSystemInfo, {
             autoNav: this.autoNav,
-            onChange: (val) => (this.autoNav = val),
+            onChange: (val) => {
+              this.autoNav = val;
+              if (!val) this._exp.world.mapPin.hidden();
+            },
           }),
           okButtonProps: {
             hidden: true,

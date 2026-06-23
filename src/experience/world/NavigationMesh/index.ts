@@ -27,6 +27,9 @@ export class NavigationMesh {
 
     this._exp.picker.register(group, {
       onClick: (_, point) => {
+        if (!this._exp.world.car.autoNav) return;
+        if (!this._exp.world.mapPin.target.visible) this._exp.world.mapPin.target.visible = true;
+
         const p = point.clone().setY(1.5);
         this._exp.world.mapPin.target.position.copy(p);
       },
