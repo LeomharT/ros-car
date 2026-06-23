@@ -98,6 +98,11 @@ export class Picker {
     return this._raycaster.intersectObjects(target, true);
   }
 
+  public castFromCamera(v: Vector2, target?: Object3D[]) {
+    this._raycaster.setFromCamera(v, this._exp.camera.instance);
+    return this._raycaster.intersectObjects(target ?? this._exp.scene.children, true);
+  }
+
   private _resolveRegisteredTarget(target: Object3D | null): Object3D | null {
     if (!target) return null;
     if (this._handles.has(target)) return target;

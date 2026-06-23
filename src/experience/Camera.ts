@@ -79,15 +79,5 @@ export default class Camera {
     // Update controls
     this.control2.update();
     this.control1.update(time);
-
-    // Update ui marker
-    const p = this._exp.uiShell.marker.position.clone().project(this.instance);
-    p.x = (p.x + 1) / 2;
-    p.y = -(p.y - 1) / 2;
-
-    this._exp.uiShell.marker.updatePosition(
-      p.x * this._exp.sizes.width,
-      p.y * this._exp.sizes.height,
-    );
   }
 }

@@ -2,6 +2,7 @@ import type { Experience } from '../Experience';
 import { Car } from './Car';
 import { Environment } from './Environment';
 import { Floor } from './Floor';
+import { MapPin } from './MapPin';
 import { NavigationMesh } from './NavigationMesh';
 import { Sandbox } from './Sandbox';
 
@@ -16,6 +17,7 @@ export class World {
       this.car = new Car(this._exp);
       this.sandbox = new Sandbox(this._exp);
       this.navi = new NavigationMesh(this._exp);
+      this.mapPin = new MapPin(this._exp);
     });
   }
 
@@ -31,8 +33,11 @@ export class World {
 
   public navi!: NavigationMesh;
 
+  public mapPin!: MapPin;
+
   public update() {
     this.car?.update();
     this.sandbox?.update();
+    this.mapPin?.update();
   }
 }

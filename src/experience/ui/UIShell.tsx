@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client';
 import { Toaster } from 'sonner';
 import { Alert, type AlertParams, type AlertRef } from './components/Alert';
 import { Dialog, type DialogConfig, type DialogRef } from './components/Dialog';
-import { _Marker, type MarkersRef } from './components/Markers';
 
 export class UIShell {
   private constructor() {
@@ -13,7 +12,6 @@ export class UIShell {
     this.el = root.el;
     this.dialog = root.dialogRef;
     this.alert = root.alertRef;
-    this.marker = new _Marker();
   }
 
   public el: HTMLDivElement;
@@ -21,8 +19,6 @@ export class UIShell {
   public dialog: DialogRef;
 
   public alert: AlertRef;
-
-  public marker: _Marker;
 
   private _initRoot() {
     /**
@@ -38,7 +34,6 @@ export class UIShell {
 
     const dialogRef = createRef() as DialogRef;
     const alertRef = createRef() as AlertRef;
-    const markersRef = createRef() as MarkersRef;
 
     const root = createRoot(el);
     root.render(
@@ -51,7 +46,7 @@ export class UIShell {
       </React.StrictMode>,
     );
 
-    return { el, dialogRef, alertRef, markersRef };
+    return { el, dialogRef, alertRef };
   }
 
   private static _instance: UIShell;

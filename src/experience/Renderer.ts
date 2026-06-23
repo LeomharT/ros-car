@@ -11,6 +11,7 @@ import {
   SRGBColorSpace,
   WebGLRenderer,
 } from 'three';
+import { CSS3DRenderer } from 'three/examples/jsm/Addons.js';
 import type { Experience } from './Experience';
 
 export default class Renderer {
@@ -18,12 +19,16 @@ export default class Renderer {
     this._exp = exp;
 
     this.instance = this._setupInstance();
+    this.cssRender = this._setupCSSRenderer();
+
     this._debugPane();
   }
 
   private _exp: Experience;
 
   public instance: WebGLRenderer;
+
+  public cssRender: CSS3DRenderer;
 
   private _setupInstance(): WebGLRenderer {
     const renderer = new WebGLRenderer({
@@ -37,6 +42,17 @@ export default class Renderer {
     renderer.shadowMap.type = PCFSoftShadowMap;
     renderer.setSize(this._exp.sizes.width, this._exp.sizes.height);
     renderer.setPixelRatio(this._exp.sizes.pixelRatio);
+
+    return renderer;
+  }
+
+  private _setupCSSRenderer() {
+    const renderer = new CSS3DRenderer();
+    renderer.setSize(this._exp.sizes.width, this._exp.sizes.height);
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.pointerEvents = 'none';
 
     return renderer;
   }
@@ -67,6 +83,7 @@ export default class Renderer {
 
   public render() {
     this.instance.render(this._exp.scene, this._exp.camera.instance);
+    this.cssRender.render(this._exp.scene, this._exp.camera.instance);
   }
 
   public resize() {

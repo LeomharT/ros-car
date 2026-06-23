@@ -27,7 +27,9 @@ export class NavigationMesh {
 
     this._exp.picker.register(group, {
       onClick: (_, point) => {
-        this._exp.uiShell.marker.position.copy(point);
+        const p = point.clone();
+        p.y = 1.0;
+        this._exp.world.mapPin.target.position.copy(p);
       },
       onEnter: () => {
         this._exp.canvas.style.cursor = 'default';
@@ -37,20 +39,6 @@ export class NavigationMesh {
 
     this._exp.scene.add(group);
     this._exp.scene.add(helper);
-
-    // const mesh = model.scene;
-    // mesh.visible = false;
-
-    // this._exp.picker.register(mesh, {
-    //   onEnter: () => {
-    //     this._exp.canvas.style.cursor = 'default';
-    //   },
-    //   onClick: (_, p) => {
-    //     toast(`X:${p.x.toFixed(3)}, Y:${p.y.toFixed(3)}, Z:${p.z.toFixed(3)}`);
-    //   },
-    // });
-
-    // this._exp.scene.add(mesh);
 
     return model;
   }
