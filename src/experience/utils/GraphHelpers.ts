@@ -10,6 +10,10 @@ import {
 } from 'three';
 import * as YUKA from 'yuka';
 
+type Node = YUKA.Node & {
+  position: YUKA.Vector3;
+};
+
 /**
  * @author Mugen87 / https://github.com/Mugen87
  */
@@ -27,7 +31,7 @@ function createGraphHelper(
   const nodeMaterial = new MeshBasicMaterial({ color: nodeColor });
   const nodeGeometry = new IcosahedronGeometry(nodeSize, 2);
 
-  const nodes: YUKA.Node[] = [];
+  const nodes: Node[] = [];
 
   graph.getNodes(nodes);
 
@@ -55,8 +59,8 @@ function createGraphHelper(
     graph.getEdgesOfNode(node.index, edges);
 
     for (let edge of edges) {
-      const fromNode = graph.getNode(edge.from);
-      const toNode = graph.getNode(edge.to);
+      const fromNode = graph.getNode(edge.from) as Node;
+      const toNode = graph.getNode(edge.to) as Node;
 
       position.push(fromNode.position.x, fromNode.position.y, fromNode.position.z);
       position.push(toNode.position.x, toNode.position.y, toNode.position.z);
