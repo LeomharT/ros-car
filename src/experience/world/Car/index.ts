@@ -86,7 +86,10 @@ export class Car {
             autoNav: this.autoNav,
             onChange: (val) => {
               this.autoNav = val;
-              if (!val) this._exp.world.mapPin.hidden();
+              if (!val) {
+                this._exp.world.mapPin.hidden();
+                this._exp.world.navi.dispose();
+              }
             },
           }),
           okButtonProps: {

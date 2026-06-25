@@ -93,6 +93,7 @@ export class NavigationMesh {
 
     this._line.updateMatrix();
     this._line.updateMatrixWorld();
+    if (!this._line.visible) this._line.visible = true;
   }
 
   private _findPathTo(model: YUKA.NavMesh, point: Vector3) {
@@ -106,6 +107,11 @@ export class NavigationMesh {
 
     this.curve = new CatmullRomCurve3(points.map((v) => new Vector3(v.x, v.y, v.z)));
     this._updateCurve(this.curve.getPoints(50));
+  }
+
+  public dispose() {
+    this.curve = undefined;
+    this._line.visible = false;
   }
 }
 
