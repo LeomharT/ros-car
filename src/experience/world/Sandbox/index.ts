@@ -271,7 +271,7 @@ export class Sandbox {
     if (this.parkingGround.cursor) return;
 
     const i = this._exp.picker.cast(
-      [this._exp.world.car.car.mesh],
+      [this._exp.world.car.mesh],
       this.parkingGround.mesh.position,
       new Vector3(0, 1, 0),
     );

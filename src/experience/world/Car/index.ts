@@ -5,6 +5,7 @@ import {
   JointData,
   MotorModel,
   RevoluteImpulseJoint,
+  RigidBody,
   RigidBodyDesc,
 } from '@dimforge/rapier3d';
 import React from 'react';
@@ -17,7 +18,13 @@ export class Car {
     this._exp = exp;
     this._pane = this._setupPane();
 
-    this.car = this._initModel();
+    const model = this._initModel();
+
+    this.mesh = model.mesh;
+    this.wheels = model.wheels;
+    this.carBody = model.carBody;
+    this.wheelBodies = model.wheelBodys;
+    this.wheelJoints = model.wheelJoints;
   }
 
   private _exp: Experience;
@@ -28,7 +35,15 @@ export class Car {
 
   public _velocity: number = 0;
 
-  public car: ReturnType<typeof this._initModel>;
+  public mesh: Group;
+
+  public wheels: Mesh[];
+
+  public carBody: RigidBody;
+
+  public wheelBodies: RigidBody[];
+
+  public wheelJoints: RevoluteImpulseJoint[];
 
   public autoNav: boolean = false;
 
@@ -91,7 +106,7 @@ export class Car {
     this._exp.scene.attach(wheelBL);
     this._exp.scene.attach(wheelBR);
 
-    const wheels = [wheelFL, wheelFR, wheelBL, wheelBR] as const;
+    const wheels: Mesh[] = [wheelFL, wheelFR, wheelBL, wheelBR] as const;
 
     const controls = {
       enabled: false,
@@ -254,13 +269,13 @@ export class Car {
 
   public update() {
     // Update Carbody
-    this.car.mesh.position.copy(this.car.carBody.translation());
-    this.car.mesh.quaternion.copy(this.car.carBody.rotation());
+    this.mesh.position.copy(this.carBody.translation());
+    this.mesh.quaternion.copy(this.carBody.rotation());
 
     // Update wheels
-    for (let i = 0; i < this.car.wheelBodys.length; i++) {
-      this.car.wheels[i].position.copy(this.car.wheelBodys[i].translation());
-      this.car.wheels[i].quaternion.copy(this.car.wheelBodys[i].rotation());
+    for (let i = 0; i < this.wheelBodies.length; i++) {
+      this.wheels[i].position.copy(this.wheelBodies[i].translation());
+      this.wheels[i].quaternion.copy(this.wheelBodies[i].rotation());
     }
 
     this._steer = 0;
@@ -271,8 +286,8 @@ export class Car {
     if (this._exp.keyboardCtrl.keyMap.KeyD) {
       this._steer -= 0.6;
     }
-    this.car.wheelJoints[0].configureMotorPosition(this._steer, 100, 10);
-    this.car.wheelJoints[1].configureMotorPosition(this._steer, 100, 10);
+    this.wheelJoints[0].configureMotorPosition(this._steer, 100, 10);
+    this.wheelJoints[1].configureMotorPosition(this._steer, 100, 10);
 
     this._velocity = 0;
     let factor = 2.0;
@@ -291,7 +306,7 @@ export class Car {
       factor = 60;
     }
 
-    this.car.wheelJoints[2].configureMotorVelocity(this._velocity, factor);
-    this.car.wheelJoints[3].configureMotorVelocity(this._velocity, factor);
+    this.wheelJoints[2].configureMotorVelocity(this._velocity, factor);
+    this.wheelJoints[3].configureMotorVelocity(this._velocity, factor);
   }
 }
