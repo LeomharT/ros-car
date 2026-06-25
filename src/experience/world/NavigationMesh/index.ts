@@ -58,8 +58,10 @@ export class NavigationMesh {
         const p = point.clone().setY(1.5);
         this._exp.world.mapPin.target.position.copy(p);
 
+        console.log(point);
+
         this._exp.world.car.navStep = 0;
-        this._findPathTo(model, point);
+        this.findPathTo(point);
       },
       onEnter: () => {
         this._exp.canvas.style.cursor = 'default';
@@ -96,11 +98,11 @@ export class NavigationMesh {
     if (!this._line.visible) this._line.visible = true;
   }
 
-  private _findPathTo(model: YUKA.NavMesh, point: Vector3) {
+  public findPathTo(point: Vector3) {
     const from = this._exp.world.car.mesh.position.clone();
     const to = point.clone();
 
-    const points = model.findPath(
+    const points = this.mesh.findPath(
       new YUKA.Vector3(from.x, from.y, from.z),
       new YUKA.Vector3(to.x, to.y, to.z),
     );

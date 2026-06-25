@@ -26,6 +26,12 @@ export class Sandbox {
     this._exp.scene.add(this.mesh);
   }
 
+  private static PARK_POINT = new Vector3(
+    -2.1002781671424886,
+    -5.232202227034577e-8,
+    3.7539942658776724,
+  );
+
   private _exp: Experience;
 
   public mesh: Group;
