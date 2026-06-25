@@ -9,7 +9,7 @@ import {
   RigidBodyDesc,
 } from '@dimforge/rapier3d';
 import React from 'react';
-import { Group, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
+import { Group, MathUtils, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
 import type { FolderApi } from 'tweakpane';
 import type { Experience } from '../../Experience';
 
@@ -23,7 +23,7 @@ export class Car {
     this.mesh = model.mesh;
     this.wheels = model.wheels;
     this.carBody = model.carBody;
-    this.wheelBodies = model.wheelBodys;
+    this.wheelBodies = model.wheelBodies;
     this.wheelJoints = model.wheelJoints;
   }
 
@@ -45,11 +45,15 @@ export class Car {
 
   public wheelJoints: RevoluteImpulseJoint[];
 
-  public autoNav: boolean = false;
+  public autoNav: boolean = true;
+
+  public navStep: number = 0;
 
   private static FORWARD_SPEED: number = 20;
 
   private static BACKWARD_SPEED: number = -18;
+
+  private static NAV_SPEED: number = 3;
 
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '🚗 Car' });
@@ -191,7 +195,7 @@ export class Car {
     wheelBRColliderDesc.setCollisionGroups(0x00040001);
     this._exp.physicWorld.instance.createCollider(wheelBRColliderDesc, wheelBRBody);
 
-    const wheelBodys = [wheelFLBody, wheelFRBody, wheelBLBody, wheelBRBody];
+    const wheelBodies = [wheelFLBody, wheelFRBody, wheelBLBody, wheelBRBody];
 
     // Create front axes for steer
     const axelFLBodyDesc = RigidBodyDesc.dynamic();
@@ -264,10 +268,12 @@ export class Car {
 
     const wheelJoints = [axelFLJoint, axelFRJoint, wheelBLJoint, wheelBRJoint];
 
-    return { mesh, wheels, carBody, wheelBodys, wheelJoints };
+    return { mesh, wheels, carBody, wheelBodies, wheelJoints };
   }
 
   public update() {
+    const dt = this._exp.time.delta;
+
     // Update Carbody
     this.mesh.position.copy(this.carBody.translation());
     this.mesh.quaternion.copy(this.carBody.rotation());
@@ -276,6 +282,30 @@ export class Car {
     for (let i = 0; i < this.wheelBodies.length; i++) {
       this.wheels[i].position.copy(this.wheelBodies[i].translation());
       this.wheels[i].quaternion.copy(this.wheelBodies[i].rotation());
+    }
+
+    // Auto navigation
+    if (this.autoNav) {
+      const curve = this._exp.world.navi.curve;
+
+      if (curve) {
+        const position = curve.getPointAt(this.navStep);
+        const direction = curve.getTangentAt(this.navStep);
+
+        const quaternion = this.mesh.quaternion;
+        quaternion.setFromUnitVectors(new Vector3(1, 0, 0), direction.normalize());
+
+        this.carBody.setTranslation(position, false);
+        this.carBody.setRotation(quaternion, true);
+
+        const length = curve.getLength();
+        const t = (Car.NAV_SPEED * dt) / length;
+
+        this.navStep += t;
+        this.navStep = MathUtils.clamp(this.navStep, 0, 1);
+      }
+
+      return;
     }
 
     this._steer = 0;

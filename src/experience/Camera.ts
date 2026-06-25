@@ -43,6 +43,7 @@ export default class Camera {
     controls2.noRotate = true;
     controls2.noZoom = false;
     controls2.zoomSpeed = 1.5;
+    controls2.dynamicDampingFactor = 0.22;
 
     return { controls1, controls2 };
   }

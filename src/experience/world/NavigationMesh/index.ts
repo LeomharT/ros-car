@@ -1,18 +1,35 @@
 import type { Experience } from '@/experience/Experience';
 import { createGraphHelper } from '@/experience/utils/GraphHelpers';
-import { BufferGeometry, Color, Float32BufferAttribute, Mesh, MeshBasicMaterial } from 'three';
+import {
+  BufferGeometry,
+  CatmullRomCurve3,
+  Color,
+  Float32BufferAttribute,
+  Mesh,
+  MeshBasicMaterial,
+  Vector3,
+} from 'three';
+import { Line2, LineGeometry, LineMaterial } from 'three/examples/jsm/Addons.js';
 import * as YUKA from 'yuka';
 
 export class NavigationMesh {
   constructor(exp: Experience) {
     this._exp = exp;
     this._pane = this._setupPane();
+
+    this._line = this._initLine();
+    this._exp.scene.add(this._line);
+
     this.mesh = this._initMesh();
   }
 
   private _exp: Experience;
 
   private _pane: ReturnType<typeof this._setupPane>;
+
+  private _line: Line2;
+
+  public curve?: CatmullRomCurve3;
 
   public mesh: ReturnType<typeof this._initMesh>;
 
@@ -40,6 +57,9 @@ export class NavigationMesh {
 
         const p = point.clone().setY(1.5);
         this._exp.world.mapPin.target.position.copy(p);
+
+        this._exp.world.car.navStep = 0;
+        this._findPathTo(model, point);
       },
       onEnter: () => {
         this._exp.canvas.style.cursor = 'default';
@@ -53,9 +73,39 @@ export class NavigationMesh {
     return model;
   }
 
+  private _initLine() {
+    const geometry = new LineGeometry();
+    const material = new LineMaterial({
+      linewidth: 10,
+      depthTest: false,
+    });
+    return new Line2(geometry, material);
+  }
+
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '🧭 NavigationMesh' });
     return pane;
+  }
+
+  private _updateCurve(points: Vector3[]) {
+    this._line.geometry.dispose();
+    this._line.geometry = new LineGeometry().setFromPoints(points);
+
+    this._line.updateMatrix();
+    this._line.updateMatrixWorld();
+  }
+
+  private _findPathTo(model: YUKA.NavMesh, point: Vector3) {
+    const from = this._exp.world.car.mesh.position.clone();
+    const to = point.clone();
+
+    const points = model.findPath(
+      new YUKA.Vector3(from.x, from.y, from.z),
+      new YUKA.Vector3(to.x, to.y, to.z),
+    );
+
+    this.curve = new CatmullRomCurve3(points.map((v) => new Vector3(v.x, v.y, v.z)));
+    this._updateCurve(this.curve.getPoints(50));
   }
 }
 
