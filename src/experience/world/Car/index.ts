@@ -53,7 +53,7 @@ export class Car {
 
   private static BACKWARD_SPEED: number = -18;
 
-  private static NAV_SPEED: number = 3;
+  private static NAV_SPEED: number = 20;
 
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '🚗 Car' });
@@ -287,22 +287,37 @@ export class Car {
     // Auto navigation
     if (this.autoNav) {
       const curve = this._exp.world.navi.curve;
+      if (!curve) return;
 
-      if (curve) {
-        const position = curve.getPointAt(this.navStep);
-        const direction = curve.getTangentAt(this.navStep);
+      const position = curve.getPointAt(this.navStep);
+      const tangent = curve.getTangentAt(this.navStep).normalize();
 
-        const quaternion = this.mesh.quaternion;
-        quaternion.setFromUnitVectors(new Vector3(1, 0, 0), direction.normalize());
+      const carForward = new Vector3(1, 0, 0).applyQuaternion(this.carBody.rotation());
+      carForward.normalize();
 
-        this.carBody.setTranslation(position, false);
-        this.carBody.setRotation(quaternion, true);
+      const cross = new Vector3().crossVectors(carForward, tangent);
+      const dot = carForward.dot(tangent);
 
-        const length = curve.getLength();
-        const t = (Car.NAV_SPEED * dt) / length;
+      const steerAngle = Math.atan2(cross.y, dot);
+      const clampedSteer = MathUtils.clamp(steerAngle * 1.5, -0.9, 0.9);
 
-        this.navStep += t;
+      this.wheelJoints[0].configureMotorPosition(clampedSteer, 100, 10);
+      this.wheelJoints[1].configureMotorPosition(clampedSteer, 100, 10);
+
+      const currentPos = this.carBody.translation();
+      const dist = new Vector3(position.x - currentPos.x, 0, position.z - currentPos.z).length();
+
+      this.wheelJoints[2].configureMotorVelocity(Car.NAV_SPEED, 2.0);
+      this.wheelJoints[3].configureMotorVelocity(Car.NAV_SPEED, 2.0);
+
+      if (dist < 1.0) {
+        this.navStep += dt;
         this.navStep = MathUtils.clamp(this.navStep, 0, 1);
+      }
+
+      if (this.navStep >= 0.9) {
+        this.wheelJoints[2].configureMotorVelocity(0.0, 60);
+        this.wheelJoints[3].configureMotorVelocity(0.0, 60);
       }
 
       return;
