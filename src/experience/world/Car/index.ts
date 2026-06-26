@@ -45,7 +45,7 @@ export class Car {
 
   public wheelJoints: RevoluteImpulseJoint[];
 
-  public autoNav: boolean = true;
+  public autoNav: boolean = false;
 
   public navStep: number = 0;
 

@@ -9,6 +9,7 @@ import {
   type ChartConfig,
 } from '@/components/ui/chart';
 import { Field, FieldContent, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Kbd, KbdGroup } from '@/components/ui/kbd';
 import { Switch } from '@/components/ui/switch';
 import {
   Table,
@@ -100,6 +101,12 @@ export default function ROSSystemInfo(props: ROSSystemInfoProps) {
             <FieldDescription>
               When enabled, clicking a point on the map will make the vehicle navigate there
               automatically. When disabled, keyboard control is used.
+              <KbdGroup>
+                <Kbd>W</Kbd> Foreward
+                <Kbd>A</Kbd> Left
+                <Kbd>S</Kbd> Backward
+                <Kbd>D</Kbd> Right
+              </KbdGroup>
             </FieldDescription>
           </FieldContent>
           <Switch
