@@ -313,7 +313,7 @@ export class Car {
       this.wheelJoints[2].configureMotorVelocity(Car.NAV_SPEED, 2.0);
       this.wheelJoints[3].configureMotorVelocity(Car.NAV_SPEED, 2.0);
 
-      if (dist < 1.0) {
+      if (dist < 1.5) {
         this.navStep += dt;
         this.navStep = MathUtils.clamp(this.navStep, 0, 1);
       }
