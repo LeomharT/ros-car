@@ -8,6 +8,7 @@ import {
   RigidBody,
   RigidBodyDesc,
 } from '@dimforge/rapier3d';
+import gsap from 'gsap';
 import React from 'react';
 import { Group, MathUtils, Mesh, MeshStandardMaterial, Quaternion, Vector3 } from 'three';
 import type { FolderApi } from 'tweakpane';
@@ -21,10 +22,13 @@ export class Car {
     const model = this._initModel();
 
     this.mesh = model.mesh;
+    this.arms = model.arms;
     this.wheels = model.wheels;
     this.carBody = model.carBody;
     this.wheelBodies = model.wheelBodies;
     this.wheelJoints = model.wheelJoints;
+
+    this.foldArm();
   }
 
   private _exp: Experience;
@@ -38,6 +42,8 @@ export class Car {
   public mesh: Group;
 
   public wheels: Mesh[];
+
+  public arms: Mesh[];
 
   public carBody: RigidBody;
 
@@ -100,6 +106,15 @@ export class Car {
     });
 
     this._exp.scene.add(mesh);
+
+    const arms = [
+      mesh.getObjectByName('部件6') as Mesh,
+      mesh.getObjectByName('部件5') as Mesh,
+      mesh.getObjectByName('部件4') as Mesh,
+      mesh.getObjectByName('部件3') as Mesh,
+      mesh.getObjectByName('部件2') as Mesh,
+      mesh.getObjectByName('部件1') as Mesh,
+    ];
 
     // Wheels
     const wheelFL = mesh.getObjectByName('前轮1') as Mesh;
@@ -274,7 +289,55 @@ export class Car {
 
     const wheelJoints = [axelFLJoint, axelFRJoint, wheelBLJoint, wheelBRJoint];
 
-    return { mesh, wheels, carBody, wheelBodies, wheelJoints };
+    return { mesh, wheels, arms, carBody, wheelBodies, wheelJoints };
+  }
+
+  public foldArm(duration: number = 0) {
+    const timeline = gsap.timeline();
+
+    timeline
+      .to(this.arms[1].rotation, {
+        x: Math.PI * 0.7,
+        duration,
+      })
+      .to(this.arms[2].rotation, {
+        x: -2.09,
+        duration,
+      })
+      .to(this.arms[3].rotation, {
+        x: -1.1,
+        duration,
+      })
+      .to(this.arms[4].rotation, {
+        z: 1.7,
+        duration,
+      });
+
+    timeline.play();
+  }
+
+  public expandArm(duration: number) {
+    const timeline = gsap.timeline();
+
+    timeline
+      .to(this.arms[1].rotation, {
+        x: 0,
+        duration,
+      })
+      .to(this.arms[2].rotation, {
+        x: 0,
+        duration,
+      })
+      .to(this.arms[3].rotation, {
+        x: 0,
+        duration,
+      })
+      .to(this.arms[4].rotation, {
+        z: 0,
+        duration,
+      });
+
+    timeline.play();
   }
 
   public update() {
