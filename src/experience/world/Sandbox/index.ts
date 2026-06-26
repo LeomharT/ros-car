@@ -197,17 +197,23 @@ export class Sandbox {
       red: {
         mesh: redLight,
         material: redLight.material,
-        darkMaterial: new MeshStandardMaterial({ color: redLight.material.color }),
+        darkMaterial: new MeshStandardMaterial({
+          color: redLight.material.color.clone().multiplyScalar(0.5),
+        }),
       },
       yellow: {
         mesh: yellowLight,
         material: yellowLight.material,
-        darkMaterial: new MeshStandardMaterial({ color: yellowLight.material.color }),
+        darkMaterial: new MeshStandardMaterial({
+          color: yellowLight.material.color.clone().multiplyScalar(0.5),
+        }),
       },
       green: {
         mesh: greenLight,
         material: greenLight.material,
-        darkMaterial: new MeshStandardMaterial({ color: greenLight.material.color }),
+        darkMaterial: new MeshStandardMaterial({
+          color: greenLight.material.color.clone().multiplyScalar(0.5),
+        }),
       },
     };
 
