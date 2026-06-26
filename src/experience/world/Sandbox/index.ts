@@ -14,6 +14,7 @@ type LightMesh = Mesh<BufferGeometry, MeshStandardMaterial>;
 export class Sandbox {
   constructor(exp: Experience) {
     this._exp = exp;
+    this.pane = this._setupPane();
 
     this.mesh = this._initModel();
     this.floor = this._initFloor();
@@ -21,7 +22,6 @@ export class Sandbox {
     this.barrier = this._initBarrier();
     this.parkingGround = this._initParkingGround();
     this.trafficLight = this._initTrafficLight();
-    this.pane = this._setupPane();
 
     this._exp.scene.add(this.mesh);
   }
@@ -155,17 +155,13 @@ export class Sandbox {
       },
       onClick: () => {
         alert.open({
-          title: 'Hello',
+          title: 'Return to Parking Point',
           size: 'sm',
-          description: [
-            'Description, this is alot of description, do you know ',
-            React.createElement('a', {
-              key: 'link',
-              children: 'Link is here',
-              style: { cursor: 'pointer' },
-            }),
-            ' Description second',
-          ],
+          description: 'Confirm to let the vehicle automatically drive back to the parking point.',
+          onOk: () => {
+            this._exp.world.car.autoNav = true;
+            this._exp.world.navi.findPathTo(Sandbox.PARK_POINT, false);
+          },
         });
       },
     });

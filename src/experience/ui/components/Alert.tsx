@@ -8,7 +8,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import React, { useImperativeHandle, useState, type ReactNode } from 'react';
+import React, { useImperativeHandle, useState, type MouseEvent, type ReactNode } from 'react';
 
 export type AlertRef = React.RefObject<{
   open: (props: AlertParams) => void;
@@ -25,6 +25,8 @@ export type AlertParams = {
   icon?: React.ReactNode;
   okText?: React.ReactNode;
   cancelText?: ReactNode;
+  onOk?: (e: MouseEvent) => void;
+  onCancel?: (e: MouseEvent) => void;
 };
 
 export function Alert({ ref }: AlertProps) {
@@ -48,8 +50,8 @@ export function Alert({ ref }: AlertProps) {
           <AlertDialogDescription>{props?.description} </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Don&apos;t allow</AlertDialogCancel>
-          <AlertDialogAction>Allow</AlertDialogAction>
+          <AlertDialogCancel onClick={props?.onCancel}>Don&apos;t allow</AlertDialogCancel>
+          <AlertDialogAction onClick={props?.onOk}>Allow</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
