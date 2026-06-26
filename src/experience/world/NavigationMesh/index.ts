@@ -5,6 +5,7 @@ import {
   CatmullRomCurve3,
   Color,
   Float32BufferAttribute,
+  MathUtils,
   Mesh,
   MeshBasicMaterial,
   Vector3,
@@ -28,6 +29,12 @@ export class NavigationMesh {
   private _pane: ReturnType<typeof this._setupPane>;
 
   private _line: Line2;
+
+  private _points: Vector3[] = [];
+
+  private _pointIndex: number = 0;
+
+  private _showLine: boolean = true;
 
   public curve?: CatmullRomCurve3;
 
@@ -58,10 +65,8 @@ export class NavigationMesh {
         const p = point.clone().setY(1.5);
         this._exp.world.mapPin.target.position.copy(p);
 
-        console.log(point);
-
         this._exp.world.car.navStep = 0;
-        this.findPathTo(point);
+        this.findPathTo(point, true);
       },
       onEnter: () => {
         this._exp.canvas.style.cursor = 'default';
@@ -89,16 +94,16 @@ export class NavigationMesh {
     return pane;
   }
 
-  private _updateCurve(points: Vector3[], showLine: boolean = true) {
+  private _updateCurve(points: Vector3[]) {
     this._line.geometry.dispose();
     this._line.geometry = new LineGeometry().setFromPoints(points);
 
     this._line.updateMatrix();
     this._line.updateMatrixWorld();
-    if (!this._line.visible) this._line.visible = showLine;
+    if (!this._line.visible) this._line.visible = this._showLine;
   }
 
-  public findPathTo(point: Vector3, showLine: boolean = true) {
+  public findPathTo(point: Vector3, showLine: boolean) {
     const from = this._exp.world.car.mesh.position.clone();
     const to = point.clone();
 
@@ -108,12 +113,27 @@ export class NavigationMesh {
     );
 
     this.curve = new CatmullRomCurve3(points.map((v) => new Vector3(v.x, v.y, v.z)));
-    this._updateCurve(this.curve.getPoints(50), showLine);
+    this._pointIndex = 0;
+    this._points = [];
+    this._showLine = showLine;
+    // this._updateCurve(this.curve.getPoints(50), showLine);
   }
 
   public dispose() {
     this.curve = undefined;
     this._line.visible = false;
+  }
+
+  public update() {
+    if (this.curve) {
+      const dt = this._exp.time.delta;
+
+      this._pointIndex += (dt * 10) / this.curve.getLength();
+      this._pointIndex = MathUtils.clamp(this._pointIndex, 0, 1);
+
+      this._points.push(this.curve.getPointAt(this._pointIndex));
+      this._updateCurve(this._points);
+    }
   }
 }
 

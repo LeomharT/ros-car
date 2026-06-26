@@ -39,5 +39,6 @@ export class World {
     this.car?.update();
     this.sandbox?.update();
     this.mapPin?.update();
+    this.navi?.update();
   }
 }

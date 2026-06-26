@@ -116,16 +116,19 @@ export class Car {
     const wheels: Mesh[] = [wheelFL, wheelFR, wheelBL, wheelBR] as const;
 
     const controls = {
-      enabled: false,
+      enabled: true,
     };
 
     // Car body
     const carBodyDesc = RigidBodyDesc.dynamic();
-    carBodyDesc.setTranslation(0, 1.25, 0);
+    carBodyDesc.setTranslation(0, 0, 0);
     carBodyDesc.setCanSleep(false);
     carBodyDesc.setEnabled(false);
     carBodyDesc.setLinearDamping(0.5);
     const carBody = this._exp.physicWorld.instance.createRigidBody(carBodyDesc);
+    carBody.setLinvel({ x: 0, y: 0, z: 0 }, true);
+    carBody.setAngvel({ x: 0, y: 0, z: 0 }, true);
+    requestAnimationFrame(() => carBody.setEnabled(controls.enabled));
 
     const carColliderDesc = ColliderDesc.cuboid(1.55, 1.25, 0.55);
     carColliderDesc.setTranslation(0, 1.5, 0);
