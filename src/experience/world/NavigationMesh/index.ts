@@ -66,7 +66,7 @@ export class NavigationMesh {
         this._exp.world.mapPin.target.position.copy(p);
 
         this._exp.world.car.navStep = 0;
-        this.findPathTo(point, true);
+        this.findPathTo(point);
       },
       onEnter: () => {
         this._exp.canvas.style.cursor = 'default';
@@ -103,7 +103,7 @@ export class NavigationMesh {
     if (!this._line.visible) this._line.visible = this._showLine;
   }
 
-  public findPathTo(point: Vector3, showLine: boolean) {
+  public findPathTo(point: Vector3, showLine: boolean = true) {
     const from = this._exp.world.car.mesh.position.clone();
     const to = point.clone();
 
