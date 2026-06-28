@@ -61,6 +61,26 @@ export class Car {
 
   private static NAV_SPEED: number = 20;
 
+  private _openSysInfo() {
+    dialog.open({
+      size: 'md',
+      title: 'Product System Information',
+      content: React.createElement(ROSSystemInfo, {
+        autoNav: this.autoNav,
+        onChange: (val) => {
+          this.autoNav = val;
+          if (!val) {
+            this._exp.world.mapPin.hidden();
+            this._exp.world.navi.dispose();
+          }
+        },
+      }),
+      okButtonProps: {
+        hidden: true,
+      },
+    });
+  }
+
   private _setupPane() {
     const pane = this._exp.debug.pane.addFolder({ title: '🚗 Car' });
     return pane;
@@ -84,25 +104,7 @@ export class Car {
       onLeave: () => {
         this._exp.canvas.style.cursor = 'default';
       },
-      onClick: () => {
-        dialog.open({
-          size: 'md',
-          title: 'Product System Information',
-          content: React.createElement(ROSSystemInfo, {
-            autoNav: this.autoNav,
-            onChange: (val) => {
-              this.autoNav = val;
-              if (!val) {
-                this._exp.world.mapPin.hidden();
-                this._exp.world.navi.dispose();
-              }
-            },
-          }),
-          okButtonProps: {
-            hidden: true,
-          },
-        });
-      },
+      onClick: () => this._openSysInfo(),
     });
 
     this._exp.scene.add(mesh);
