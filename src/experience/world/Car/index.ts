@@ -55,6 +55,8 @@ export class Car {
 
   public navStep: number = 0;
 
+  public armState: boolean = false;
+
   private static FORWARD_SPEED: number = 20;
 
   private static BACKWARD_SPEED: number = -18;
@@ -67,12 +69,18 @@ export class Car {
       title: 'Product System Information',
       content: React.createElement(ROSSystemInfo, {
         autoNav: this.autoNav,
-        onChange: (val) => {
+        armState: this.armState,
+        onNavChange: (val) => {
           this.autoNav = val;
           if (!val) {
             this._exp.world.mapPin.hidden();
             this._exp.world.navi.dispose();
           }
+        },
+        onStateChange: (val) => {
+          this.armState = val;
+          if (this.armState) this.expandArm(2);
+          else this.foldArm(2);
         },
       }),
       okButtonProps: {

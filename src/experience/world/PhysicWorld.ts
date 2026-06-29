@@ -36,7 +36,9 @@ export class PhysicWorld {
     const geometry = new BufferGeometry();
     const material = new LineBasicMaterial({ color: 0xffffff, vertexColors: true, fog: false });
     const mesh = new LineSegments(geometry, material);
+    mesh.visible = this._exp.debug.debugging;
     mesh.frustumCulled = false;
+
     this._exp.scene.add(mesh);
 
     const pane = this._exp.debug.pane.addFolder({ title: '⚛️ Physic' });

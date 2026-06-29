@@ -49,10 +49,10 @@ export class NavigationMesh {
     group.material.polygonOffsetFactor = -2.0;
     group.material.needsUpdate = true;
     group.material.fog = false;
-    // group.visible = false;
+    group.visible = this._exp.debug.debugging;
 
     const helper = createGraphHelper(model.graph, 0.2);
-    // helper.visible = false;
+    helper.visible = this._exp.debug.debugging;
 
     this._pane.addBinding(group, 'visible', { label: 'Region Helper' });
     this._pane.addBinding(helper, 'visible', { label: 'Graph Helper' });

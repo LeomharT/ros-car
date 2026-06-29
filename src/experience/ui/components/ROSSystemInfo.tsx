@@ -64,7 +64,9 @@ const CHART_COLOR2 = 'lab(54.1736% 13.3369 -74.6839)';
 
 type ROSSystemInfoProps = {
   autoNav?: boolean;
-  onChange?: (val: boolean) => void;
+  onNavChange?: (val: boolean) => void;
+  armState?: boolean;
+  onStateChange?: (val: boolean) => void;
 };
 
 export default function ROSSystemInfo(props: ROSSystemInfoProps) {
@@ -113,7 +115,26 @@ export default function ROSSystemInfo(props: ROSSystemInfoProps) {
             id="auto-nav"
             autoFocus={false}
             defaultChecked={props.autoNav}
-            onCheckedChange={props.onChange}
+            onCheckedChange={props.onNavChange}
+          />
+        </Field>
+      </div>
+      <div className="space-y-1">
+        <Field orientation="horizontal">
+          <FieldContent>
+            <FieldLabel htmlFor="robot-arm" className="text-foreground">
+              Robot Arm
+            </FieldLabel>
+            <FieldDescription>
+              Controls the robotic arm's deploy state, allowing it to fold for compact movement or
+              extend for operation.
+            </FieldDescription>
+          </FieldContent>
+          <Switch
+            id="robot-arm"
+            autoFocus={false}
+            defaultChecked={props.armState}
+            onCheckedChange={props.onStateChange}
           />
         </Field>
       </div>
