@@ -1,67 +1,50 @@
 # ROS Car
 
-An interactive 3D vehicle simulation built with **Three.js**, **Rapier3D**, **Yuka**, and **TypeScript**.
+ROS Car is a **WebGL 3D virtual simulation** and **digital twin** portfolio project built with **Three.js**, **Rapier3D**, **Yuka**, **React**, and **TypeScript**.
 
-The project focuses on real-time 3D interaction, physics-driven motion, custom shaders, and navigation mesh based path following. It uses a ROS-inspired sandbox theme as the application context, but the core value is the WebGL experience itself.
+Live Demo: https://ros-car-blush.vercel.app/
 
-## Highlights
+The name comes from the `ROS car` project I worked on in my company, but this repository is positioned as a **WebGL showcase piece** in my personal portfolio. It uses a robotics-inspired sandbox as the scene theme while focusing on browser-based 3D interaction, physics, pathfinding, and UI composition.
 
-- **Physics-based vehicle simulation** with Rapier3D
-- **Navigation mesh pathfinding** using Yuka
-- **Interactive scene objects** with pointer picking and UI actions
-- **Custom GLSL shaders** for the floor and visual effects
-- **React-based HUD and dialogs** layered on top of the 3D canvas
-- **Live debugging tools** for inspecting runtime state and tuning parameters
-- **HDR environment lighting** and compressed GLTF asset loading
+## What This Project Does
+
+- Renders an interactive 3D scene in the browser
+- Simulates a drivable vehicle with real-time physics
+- Supports automatic navigation through a navigation mesh
+- Provides clickable scene elements and floating UI overlays
+- Uses custom GLSL shaders for the floor grid
+- Includes debug tools for tuning scene, physics, and navigation state
+- Loads GLTF models, HDR lighting, and YUKA navmesh assets
+
+## Core Features
+
+- **Vehicle physics** with Rapier3D
+- **Manual driving** with `W / A / S / D`
+- **Auto navigation** along a YUKA-generated path
+- **Interactive sandbox objects** including barrier gates, traffic lights, and a parking zone
+- **Shader-driven floor grid** with tweakable parameters
+- **HDR environment lighting** and fog
+- **CSS3D marker overlay** for map targeting and occlusion-aware display
+- **Debug pane** exposed through `#debug`
 
 ## Tech Stack
 
-| Category | Tools |
-| :--- | :--- |
-| **3D / Rendering** | Three.js |
-| **Physics** | Rapier3D |
-| **Pathfinding** | Yuka |
-| **UI** | React 19, Sonner, shadcn/ui, Radix UI |
-| **Animation** | GSAP |
-| **Debugging** | Tweakpane |
-| **Build Tool** | Vite |
-| **Language** | TypeScript |
-
-## Features
-
-- Drivable vehicle with keyboard control
-- Auto-navigation mode that follows a navigation path
-- Clickable map elements such as barriers, parking zones, and traffic lights
-- HUD overlay for system information and control hints
-- Runtime debug pane for tweaking scene and simulation state
-- GLSL-based floor shader
-- HDRI environment lighting
-- GLTF model loading with DRACO compression
-
-## Project Structure
-
-```text
-src/
-├── experience/
-│   ├── world/             # Scene objects and simulation logic
-│   │   ├── Car/           # Vehicle physics and controls
-│   │   ├── Sandbox/       # Interactive map elements
-│   │   ├── Floor/         # Custom shader floor
-│   │   ├── Environment/   # Lighting and HDRI setup
-│   │   └── NavigationMesh/ # Pathfinding and route visualization
-│   ├── ui/                # React UI, dialogs, and debug tools
-│   ├── utils/             # Loading, timing, input, and picking helpers
-│   ├── PhysicWorld.ts     # Rapier3D integration
-│   └── Experience.ts      # Main runtime entry
-├── index.ts               # App bootstrap
-└── index.css              # Global styles
-```
+| Category       | Tools                                 |
+| :------------- | :------------------------------------ |
+| 3D / Rendering | Three.js                              |
+| Physics        | Rapier3D                              |
+| Pathfinding    | Yuka                                  |
+| UI             | React 19, Sonner, Radix UI, shadcn/ui |
+| Animation      | GSAP                                  |
+| Debugging      | Tweakpane                             |
+| Build Tool     | Vite                                  |
+| Language       | TypeScript                            |
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ recommended
+- Node.js 18 or newer
 - npm
 
 ### Install
@@ -93,24 +76,10 @@ npm run preview
 - `W` / `S`: Accelerate / reverse
 - `A` / `D`: Steer left / right
 - Mouse click: Interact with scene objects
-
-## What This Project Demonstrates
-
-- Real-time 3D scene architecture in the browser
-- Physics integration for a dynamic vehicle
-- Pathfinding and route visualization on a navigation mesh
-- Shader authoring and environment lighting
-- UI composition on top of a WebGL canvas
-- Runtime tooling for simulation inspection
+- Add `#debug` to the URL to show the debug pane
 
 ## Notes
 
-- The ROS theme is used as the simulation context.
-- The project is best positioned as a **WebGL / 3D frontend showcase**, not as a robotics or hardware project.
-
-## Roadmap
-
-- Mobile touch controls
-- More camera modes
-- Improved performance profiling
-- Optional sound effects
+- The project is intentionally framed as a **WebGL / 3D portfolio work**, not as a robotics product.
+- The ROS-themed scene is the inspiration, while the implementation focus is browser-native 3D simulation and digital twin presentation.
+- The application uses a layered UI approach: WebGL canvas for the scene, CSS3D for markers, and React for dialogs and system panels.
