@@ -365,6 +365,8 @@ export class Car {
 
     // Auto navigation
     if (this.autoNav) {
+      this.carBody.setLinearDamping(0.5);
+
       const curve = this._exp.world.navi.curve;
       if (!curve) return;
 
@@ -418,6 +420,14 @@ export class Car {
 
     const forward = this._exp.keyboardCtrl.keyMap.KeyW;
     const backward = this._exp.keyboardCtrl.keyMap.KeyS;
+
+    const damping = this.carBody.linearDamping();
+
+    if (forward || backward) {
+      this.carBody.setLinearDamping(0.5);
+    } else {
+      this.carBody.setLinearDamping(MathUtils.damp(damping, 80, 0.5, dt));
+    }
 
     if (forward) {
       this._velocity = Car.FORWARD_SPEED;
