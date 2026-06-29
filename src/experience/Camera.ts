@@ -44,6 +44,8 @@ export default class Camera {
     controls2.noZoom = false;
     controls2.zoomSpeed = 1.5;
     controls2.dynamicDampingFactor = 0.22;
+    controls2.minDistance = 5;
+    controls2.maxDistance = 75;
 
     return { controls1, controls2 };
   }

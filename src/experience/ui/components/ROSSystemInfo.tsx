@@ -209,7 +209,7 @@ export default function ROSSystemInfo(props: ROSSystemInfoProps) {
             <TabsTrigger value="battery">Battery</TabsTrigger>
           </TabsList>
           <TabsContent value="velocity">
-            <Card>
+            <Card className="ring-0">
               <CardContent>
                 <ChartContainer config={chartConfig}>
                   <AreaChart
@@ -253,7 +253,7 @@ export default function ROSSystemInfo(props: ROSSystemInfoProps) {
             </Card>
           </TabsContent>
           <TabsContent value="battery">
-            <Card>
+            <Card className="ring-0">
               <CardContent>
                 <ChartContainer config={chartConfig}>
                   <BarChart accessibilityLayer data={chartData}>
